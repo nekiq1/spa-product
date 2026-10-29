@@ -158,7 +158,25 @@ section{padding:70px 20px}
 .hero-actions{flex-direction:column;width:100%}
 .hero-actions .btn{width:100%}
 }
-</style>
+.marquee{overflow:hidden;white-space:nowrap;padding:16px 0;border-top:1px solid rgba(184,147,90,.2);border-bottom:1px solid rgba(184,147,90,.2);margin:40px 0}
+.marquee-inner{display:inline-block;animation:marquee 30s linear infinite;font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--gold);letter-spacing:.2em}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.stats-bar{max-width:1280px;margin:-40px auto 0;position:relative;z-index:2;background:var(--white);border-radius:var(--radius);padding:40px;box-shadow:var(--shadow);display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:2.5rem;color:var(--gold);font-weight:600;line-height:1}
+.stat-label{font-size:.85rem;color:var(--text-muted);margin-top:6px}
+.card-category{font-size:.7rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;font-weight:600}
+.rules-section{background:var(--zen);color:var(--cream)}
+.rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px}
+.rules-col .eyebrow{font-size:.8rem;text-transform:uppercase;letter-spacing:.25em;color:var(--gold);font-weight:600;margin-bottom:12px}
+.rules-col h2{color:var(--cream);margin-bottom:32px;font-size:clamp(1.8rem,3vw,2.4rem)}
+.rule-item{display:flex;gap:16px;margin-bottom:20px}
+.rule-num{color:var(--gold);font-weight:700;font-family:'Cormorant Garamond',serif;font-size:1.2rem;flex-shrink:0}
+.rule-title{font-weight:600;color:var(--cream);margin-bottom:4px}
+.rule-text{color:rgba(244,239,230,.7);font-size:.9rem;line-height:1.5}
+.info-item{margin-bottom:20px}
+.info-q{font-weight:600;color:var(--gold-light);margin-bottom:4px}
+.info-a{color:rgba(244,239,230,.7);font-size:.9rem;line-height:1.5}
+@media (max-width:900px){.stats-bar{grid-template-columns:repeat(2,1fr);padding:24px;margin-top:0}.rules-grid{grid-template-columns:1fr;gap:40px}}</style>
 </head>
 <body>
 <div class="bg-canvas"><div class="bg-blob bg-blob-1"></div><div class="bg-blob bg-blob-2"></div><div class="bg-blob bg-blob-3"></div></div>
@@ -188,6 +206,16 @@ section{padding:70px 20px}
   </div>
 </section>
 
+<div class="marquee">
+  <div class="marquee-inner">和み · NEO SPA ✦ ТИШИНА ✦ リラックス · RITUAL ✦ ГАРМОНИЯ ✦ 東京 · TOKYO HEAD SPA ✦ ИСКУССТВО ✦ 和み · NEO SPA ✦ ТИШИНА ✦ リラックス · RITUAL ✦ ГАРМОНИЯ ✦ 東京 · TOKYO HEAD SPA ✦ ИСКУССТВО ✦</div>
+</div>
+<div class="stats-bar reveal">
+  <div><div class="stat-num">5+</div><div class="stat-label">лет опыта</div></div>
+  <div><div class="stat-num">2000+</div><div class="stat-label">довольных гостей</div></div>
+  <div><div class="stat-num">8</div><div class="stat-label">авторских ритуалов</div></div>
+  <div><div class="stat-num">5.0</div><div class="stat-label">средняя оценка</div></div>
+</div>
+
 <section class="video-section" id="about"><div class="section-inner">
   <div class="section-header reveal"><div class="eyebrow">Атмосфера</div><h2>Погрузитесь в Neo SPA</h2><p>Каждая деталь создана для вашего спокойствия</p></div>
   <div class="video-carousel" id="videoCarousel"></div>
@@ -198,6 +226,18 @@ section{padding:70px 20px}
 <section id="certificates"><div class="section-inner"><div class="section-header reveal"><div class="eyebrow">Подарки</div><h2>Сертификаты</h2></div><div class="cards-grid" id="certificatesGrid"></div></div></section>
 <section id="reviews"><div class="section-inner"><div class="section-header reveal"><div class="eyebrow">Отзывы</div><h2>Что говорят гости</h2></div><div class="reviews-grid" id="reviewsGrid"></div></div></section>
 
+<section id="cosmetics" style="background:var(--white);">
+  <div class="section-inner">
+    <div class="section-header reveal"><div class="eyebrow">Что мы используем</div><h2>Премиальная косметика</h2><p>Лучшие бренды из Франции, Испании и Японии</p></div>
+    <div class="cards-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+      <div class="card reveal" style="cursor:default;text-align:center;padding:32px 24px;"><h3 style="color:var(--gold);font-size:1.4rem;">Selvert Thermal</h3><p style="color:var(--text-muted);font-size:.9rem;">Термальная вода и пептиды. Глубокое увлажнение и защита.</p></div>
+      <div class="card reveal" style="cursor:default;text-align:center;padding:32px 24px;"><h3 style="color:var(--gold);font-size:1.4rem;">Sothys</h3><p style="color:var(--text-muted);font-size:.9rem;">Французская косметика. Фитотерапия и уникальные текстуры.</p></div>
+      <div class="card reveal" style="cursor:default;text-align:center;padding:32px 24px;"><h3 style="color:var(--gold);font-size:1.4rem;">Tokio Head Spa</h3><p style="color:var(--text-muted);font-size:.9rem;">Аутентичная японская линия ухода за кожей головы.</p></div>
+      <div class="card reveal" style="cursor:default;text-align:center;padding:32px 24px;"><h3 style="color:var(--gold);font-size:1.4rem;">Tokio Inkarami</h3><p style="color:var(--text-muted);font-size:.9rem;">Уход за волосами с аминокислотами и шелком.</p></div>
+    </div>
+  </div>
+</section>
+
 <section id="faq"><div class="section-inner">
   <div class="section-header reveal"><div class="eyebrow">Вопросы</div><h2>Частые вопросы</h2></div>
   <div class="faq-list">
@@ -206,6 +246,26 @@ section{padding:70px 20px}
     <div class="faq-item"><div class="faq-question" onclick="this.parentElement.classList.toggle('open')"><span>Есть ли противопоказания?</span><span class="faq-toggle">+</span></div><div class="faq-answer"><p>Мастер проведёт консультацию перед сеансом.</p></div></div>
   </div>
 </div></section>
+
+<section class="rules-section" id="rules">
+  <div class="section-inner rules-grid">
+    <div class="rules-col">
+      <div class="eyebrow">Правила Neo SPA</div>
+      <h2>Чтобы ваше пребывание было комфортным</h2>
+      <div class="rule-item"><span class="rule-num">01</span><div><div class="rule-title">Тишина и покой</div><div class="rule-text">Отключите звук телефона и соблюдайте тишину.</div></div></div>
+      <div class="rule-item"><span class="rule-num">02</span><div><div class="rule-title">Пунктуальность</div><div class="rule-text">Приходите за 5–10 минут до процедуры.</div></div></div>
+      <div class="rule-item"><span class="rule-num">03</span><div><div class="rule-title">Здоровье</div><div class="rule-text">Сообщите мастеру об аллергиях и противопоказаниях.</div></div></div>
+      <div class="rule-item"><span class="rule-num">04</span><div><div class="rule-title">Отмена записи</div><div class="rule-text">Сообщите минимум за 3–4 часа до визита.</div></div></div>
+    </div>
+    <div class="rules-col">
+      <div class="eyebrow">Что нужно знать</div>
+      <h2>Перед посещением</h2>
+      <div class="info-item"><div class="info-q">Нужно ли приносить полотенце?</div><div class="info-a">Нет. Полотенце, тапочки и все принадлежности мы предоставим.</div></div>
+      <div class="info-item"><div class="info-q">Когда приходить?</div><div class="info-a">Рекомендуем прийти за 5–10 минут, чтобы спокойно подготовиться.</div></div>
+      <div class="info-item"><div class="info-q">Где вы находитесь?</div><div class="info-a">Санкт-Петербург, ул. Есенина, 1 к1 (недалеко от метро Озерки).</div></div>
+    </div>
+  </div>
+</section>
 
 <section id="contact"><div class="section-inner">
   <div class="contact-bar reveal">
@@ -261,14 +321,14 @@ const VIDEOS=[{label:'Head SPA',src:'assets/17517719915121.mp4',poster:svgImg('H
 
 const DEFAULT_DATA={
   services:[
-    {id:'s1',title:'Barber&Head SPA',short:'Мужской ритуал',full:'Глубокое очищение, массаж головы, уход за бородой.',includes:'Очищение · Массаж · Борода · Тонизирование',price:4500,duration:'60 мин',image:'assets/hair.jpg',_k:'hair'},
-    {id:'s2',title:'Classic Head SPA',short:'Классический ритуал',full:'Мягкое очищение, пилинг, массаж.',includes:'Пилинг · Массаж · Маска',price:3900,duration:'60 мин',image:'assets/spa.jpg',_k:'spa'},
-    {id:'s3',title:'Japanese Face',short:'Японский уход',full:'Традиционные японские техники.',includes:'Очищение · Кобидо · Маска',price:5200,duration:'75 мин',image:'assets/face.jpg',_k:'face'},
-    {id:'s4',title:'Tokyo Head SPA',short:'Токийский ритуал',full:'Пилинг, массаж, уход за волосами.',includes:'Пилинг · Массаж · Уход',price:4800,duration:'70 мин',image:'assets/massage.jpg',_k:'massage'},
-    {id:'s5',title:'T-SHOCK',short:'Восстановление волос',full:'Укрепление и стимуляция роста.',includes:'Скраб · Сыворотка · Массаж',price:5600,duration:'60 мин',image:'assets/hair.jpg',_k:'hair'},
-    {id:'s6',title:'Deep Care Tokio Inkarami',short:'Уход Inkarami',full:'Японская система восстановления волос.',includes:'Очищение · Inkarami · Маска',price:6800,duration:'90 мин',image:'assets/spa.jpg',_k:'spa'},
-    {id:'s7',title:'Три-комплекс',short:'Комплекс 3 в 1',full:'Очищение, питание, восстановление.',includes:'Очищение · Питание · Восстановление',price:7500,duration:'120 мин',image:'assets/zen.jpg',_k:'zen'},
-    {id:'s8',title:'Selvert Thermal',short:'Термальный уход',full:'Термальная маска и питание.',includes:'Термальная маска · Питание',price:6200,duration:'80 мин',image:'assets/massage.jpg',_k:'massage'}
+    {id:'s1',category:'Мужской уход',title:'Barber&Head SPA',short:'Мужской ритуал',full:'Глубокое очищение, массаж головы, уход за бородой.',includes:'Очищение · Массаж · Борода · Тонизирование',price:4500,duration:'60 мин',image:'assets/hair.jpg',_k:'hair'},
+    {id:'s2',category:'Классика',title:'Classic Head SPA',short:'Классический ритуал',full:'Мягкое очищение, пилинг, массаж.',includes:'Пилинг · Массаж · Маска',price:3900,duration:'60 мин',image:'assets/spa.jpg',_k:'spa'},
+    {id:'s3',category:'Для лица',title:'Japanese Face',short:'Японский уход',full:'Традиционные японские техники.',includes:'Очищение · Кобидо · Маска',price:5200,duration:'75 мин',image:'assets/face.jpg',_k:'face'},
+    {id:'s4',category:'Флагманский уход',title:'Tokyo Head SPA',short:'Токийский ритуал',full:'Пилинг, массаж, уход за волосами.',includes:'Пилинг · Массаж · Уход',price:4800,duration:'70 мин',image:'assets/massage.jpg',_k:'massage'},
+    {id:'s5',category:'Восстановление',title:'T-SHOCK',short:'Восстановление волос',full:'Укрепление и стимуляция роста.',includes:'Скраб · Сыворотка · Массаж',price:5600,duration:'60 мин',image:'assets/hair.jpg',_k:'hair'},
+    {id:'s6',category:'Уход за волосами',title:'Deep Care Tokio Inkarami',short:'Уход Inkarami',full:'Японская система восстановления волос.',includes:'Очищение · Inkarami · Маска',price:6800,duration:'90 мин',image:'assets/spa.jpg',_k:'spa'},
+    {id:'s7',category:'Омоложение',title:'Три-комплекс',short:'Комплекс 3 в 1',full:'Очищение, питание, восстановление.',includes:'Очищение · Питание · Восстановление',price:7500,duration:'120 мин',image:'assets/zen.jpg',_k:'zen'},
+    {id:'s8',category:'Антиоксидант',title:'Selvert Thermal',short:'Термальный уход',full:'Термальная маска и питание.',includes:'Термальная маска · Питание',price:6200,duration:'80 мин',image:'assets/massage.jpg',_k:'massage'}
   ],
   subscriptions:[
     {id:'sub1',title:'Tokyo Head SPA',short:'Абонемент',full:'Регулярные сеансы со скидкой.',includes:['4 процедуры — 17 500 ₽','6 процедур — 24 900 ₽','10 процедур — 39 900 ₽'],price:17500,duration:'70 мин × N',image:'assets/massage.jpg',_k:'massage'},
@@ -276,17 +336,17 @@ const DEFAULT_DATA={
     {id:'sub3',title:'Classic Head SPA',short:'Абонемент',full:'Классический уход курсом.',includes:['4 процедуры — 13 900 ₽','6 процедур — 19 900 ₽','10 процедур — 31 900 ₽'],price:13900,duration:'60 мин × N',image:'assets/spa.jpg',_k:'spa'}
   ],
   certificates:[
-    {id:'c3000',title:'Сертификат 3 000 ₽',price:3000,image:'assets/cert.jpg',_k:'cert'},
-    {id:'c5000',title:'Сертификат 5 000 ₽',price:5000,image:'assets/cert.jpg',_k:'cert'},
-    {id:'c7000',title:'Сертификат 7 000 ₽',price:7000,image:'assets/cert.jpg',_k:'cert'},
-    {id:'c10000',title:'Сертификат 10 000 ₽',price:10000,image:'assets/cert.jpg',_k:'cert'},
-    {id:'c15000',title:'Сертификат 15 000 ₽',price:15000,image:'assets/cert.jpg',_k:'cert'},
-    {id:'c18000',title:'Сертификат 18 000 ₽',price:18000,image:'assets/cert.jpg',_k:'cert'},
-    {id:'c20000',title:'Сертификат 20 000 ₽',price:20000,image:'assets/cert.jpg',_k:'cert'},
-    {id:'c25000',title:'Сертификат 25 000 ₽',price:25000,image:'assets/cert.jpg',_k:'cert'},
-    {id:'csub1',title:'Сертификат на Tokyo Head SPA',price:17500,image:'assets/gift.jpg',_k:'gift'},
-    {id:'csub2',title:'Сертификат на Japanese Face',price:18900,image:'assets/gift.jpg',_k:'gift'},
-    {id:'csub3',title:'Сертификат на Classic Head SPA',price:13900,image:'assets/gift.jpg',_k:'gift'}
+    {id:'c3000',title:'Сертификат 3 000 ₽',short:'Подарочный сертификат на любые услуги салона номиналом 3 000 ₽',price:3000,image:'assets/cert.jpg',_k:'cert'},
+    {id:'c5000',title:'Сертификат 5 000 ₽',short:'Подарочный сертификат на любые услуги салона номиналом 5 000 ₽',price:5000,image:'assets/cert.jpg',_k:'cert'},
+    {id:'c7000',title:'Сертификат 7 000 ₽',short:'Подарочный сертификат на любые услуги салона номиналом 7 000 ₽',price:7000,image:'assets/cert.jpg',_k:'cert'},
+    {id:'c10000',title:'Сертификат 10 000 ₽',short:'Подарочный сертификат на любые услуги салона номиналом 10 000 ₽',price:10000,image:'assets/cert.jpg',_k:'cert'},
+    {id:'c15000',title:'Сертификат 15 000 ₽',short:'Подарочный сертификат на любые услуги салона номиналом 15 000 ₽',price:15000,image:'assets/cert.jpg',_k:'cert'},
+    {id:'c18000',title:'Сертификат 18 000 ₽',short:'Подарочный сертификат на любые услуги салона номиналом 18 000 ₽',price:18000,image:'assets/cert.jpg',_k:'cert'},
+    {id:'c20000',title:'Сертификат 20 000 ₽',short:'Подарочный сертификат на любые услуги салона номиналом 20 000 ₽',price:20000,image:'assets/cert.jpg',_k:'cert'},
+    {id:'c25000',title:'Сертификат 25 000 ₽',short:'Подарочный сертификат на любые услуги салона номиналом 25 000 ₽',price:25000,image:'assets/cert.jpg',_k:'cert'},
+    {id:'csub1',title:'Сертификат на Tokyo Head SPA',short:'Подарочный сертификат на абонемент Tokyo Head SPA',price:17500,image:'assets/gift.jpg',_k:'gift'},
+    {id:'csub2',title:'Сертификат на Japanese Face',short:'Подарочный сертификат на абонемент Japanese Face',price:18900,image:'assets/gift.jpg',_k:'gift'},
+    {id:'csub3',title:'Сертификат на Classic Head SPA',short:'Подарочный сертификат на абонемент Classic Head SPA',price:13900,image:'assets/gift.jpg',_k:'gift'}
   ],
   reviews:[
     {id:'r1',name:'Анна',role:'Постоянный гость',text:'Невероятная атмосфера!',rating:5},
@@ -312,7 +372,7 @@ document.querySelectorAll('#floatingMenu a').forEach(a=>a.addEventListener('clic
 async function loadSiteData(){try{const r=await fetch(API_URL,{method:'GET'});if(!r.ok)throw new Error('HTTP '+r.status);const j=await r.json();if(j.content&&Object.keys(j.content).length){const merged={...siteData,...j.content};['services','subscriptions','certificates'].forEach(k=>{if(Array.isArray(merged[k]))merged[k]=merged[k].map((it,i)=>({...siteData[k][i],...it,_k:siteData[k][i]?._k||it._k}));});siteData=merged;}}catch(e){console.warn('Fallback:',e.message);}renderAll();}
 
 function renderAll(){renderCards('servicesGrid',siteData.services,'service');renderCards('subscriptionsGrid',siteData.subscriptions,'subscription');renderCards('certificatesGrid',siteData.certificates,'certificate');renderReviews();renderContacts();}
-function renderCards(id,items,type){const g=document.getElementById(id);if(!g)return;g.innerHTML=items.map(i=>{const src=safeImg(i.image,i._k);return '<article class="card reveal" onclick="openCardModal(\''+type+'\',\''+i.id+'\')"><div class="card-img"><img src="'+src+'" alt="'+escapeHtml(i.title)+'" loading="lazy"></div><div class="card-body"><h3>'+escapeHtml(i.title)+'</h3><p>'+escapeHtml(i.short||'')+'</p><div class="card-footer"><span class="price">'+(i.price?i.price.toLocaleString('ru-RU')+' ₽':'')+'</span>'+(i.duration?'<span class="duration">'+escapeHtml(i.duration)+'</span>':'')+'</div></div></article>';}).join('');g.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));}
+function renderCards(id,items,type){const g=document.getElementById(id);if(!g)return;g.innerHTML=items.map(i=>{const src=safeImg(i.image,i._k);return '<article class="card reveal" onclick="openCardModal(\''+type+'\',\''+i.id+'\')"><div class="card-img"><img src="'+src+'" alt="'+escapeHtml(i.title)+'" loading="lazy"></div><div class="card-body">(i.category?'<div class="card-category">'+escapeHtml(i.category)+'</div>':'')+'<h3>'+escapeHtml(i.title)+'</h3><p>'+escapeHtml(i.short||'')+'</p><div class="card-footer"><span class="price">'+(i.price?i.price.toLocaleString('ru-RU')+' ₽':'')+'</span>'+(i.duration?'<span class="duration">'+escapeHtml(i.duration)+'</span>':'')+'</div></div></article>';}).join('');g.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));}
 function renderReviews(){const g=document.getElementById('reviewsGrid');if(!g)return;g.innerHTML=siteData.reviews.map(r=>'<article class="review-card reveal"><div class="review-stars">'+'★'.repeat(r.rating||5)+'</div><p class="review-text">«'+escapeHtml(r.text)+'»</p><div class="review-author">'+escapeHtml(r.name)+'</div><div class="review-role">'+escapeHtml(r.role||'')+'</div></article>').join('');g.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));}
 function renderContacts(){const c=siteData.contacts||{};document.querySelectorAll('[data-contact="phone"]').forEach(el=>{el.textContent=c.phone;el.href='tel:'+(c.phone||'').replace(/[^\d+]/g,'');});document.querySelectorAll('[data-contact="address"]').forEach(el=>el.textContent=c.address||'');document.querySelectorAll('[data-contact="email"]').forEach(el=>{el.textContent=c.email||'';el.href='mailto:'+(c.email||'');});document.querySelectorAll('[data-social]').forEach(el=>{const s=el.dataset.social;if(c[s]&&c[s]!=='#')el.href=c[s];});}
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
@@ -354,10 +414,10 @@ function editAdminItem(section,idx){
   let fields='';
   if(isReview){fields='<label class="form-label"><span>Имя</span><input type="text" id="ef_name" value="'+escapeHtml(it.name||'')+'"></label><label class="form-label"><span>Роль</span><input type="text" id="ef_role" value="'+escapeHtml(it.role||'')+'"></label><label class="form-label"><span>Текст</span><textarea id="ef_text" rows="4">'+escapeHtml(it.text||'')+'</textarea></label><label class="form-label"><span>Оценка (1-5)</span><input type="number" id="ef_rating" min="1" max="5" value="'+(it.rating||5)+'"></label>';}
   else if(isCert){fields='<label class="form-label"><span>Название</span><input type="text" id="ef_title" value="'+escapeHtml(it.title||'')+'"></label><label class="form-label"><span>Цена (₽)</span><input type="number" id="ef_price" value="'+(it.price||0)+'"></label><label class="form-label"><span>URL фото</span><input type="text" id="ef_image" value="'+escapeHtml(it.image||'')+'"></label><input type="file" accept="image/*" onchange="uploadImage(this,\'ef_image\')" style="margin-bottom:12px;"><div id="ef_preview" style="margin-bottom:12px;">'+(it.image?'<img src="'+it.image+'" style="max-width:100%;max-height:200px;border-radius:8px;">':'')+'</div>';}
-  else{fields='<label class="form-label"><span>Название</span><input type="text" id="ef_title" value="'+escapeHtml(it.title||'')+'"></label><label class="form-label"><span>Краткое</span><input type="text" id="ef_short" value="'+escapeHtml(it.short||'')+'"></label><label class="form-label"><span>Полное</span><textarea id="ef_full" rows="3">'+escapeHtml(it.full||'')+'</textarea></label><label class="form-label"><span>Что входит</span><textarea id="ef_includes" rows="3">'+escapeHtml(Array.isArray(it.includes)?it.includes.join('\n'):(it.includes||''))+'</textarea></label><label class="form-label"><span>Цена (₽)</span><input type="number" id="ef_price" value="'+(it.price||0)+'"></label><label class="form-label"><span>Длительность</span><input type="text" id="ef_duration" value="'+escapeHtml(it.duration||'')+'"></label><label class="form-label"><span>URL фото</span><input type="text" id="ef_image" value="'+escapeHtml(it.image||'')+'"></label><input type="file" accept="image/*" onchange="uploadImage(this,\'ef_image\')" style="margin-bottom:12px;"><div id="ef_preview" style="margin-bottom:12px;">'+(it.image?'<img src="'+it.image+'" style="max-width:100%;max-height:200px;border-radius:8px;">':'')+'</div>';}
+  else{fields='<label class="form-label"><span>Название</span><input type="text" id="ef_title" value="'+escapeHtml(it.title||'')+'"></label><label class="form-label"><span>Категория</span><input type="text" id="ef_category" value="'+escapeHtml(it.category||'')+'"></label><label class="form-label"><span>Краткое</span><input type="text" id="ef_short" value="'+escapeHtml(it.short||'')+'"></label><label class="form-label"><span>Полное</span><textarea id="ef_full" rows="3">'+escapeHtml(it.full||'')+'</textarea></label><label class="form-label"><span>Что входит</span><textarea id="ef_includes" rows="3">'+escapeHtml(Array.isArray(it.includes)?it.includes.join('\n'):(it.includes||''))+'</textarea></label><label class="form-label"><span>Цена (₽)</span><input type="number" id="ef_price" value="'+(it.price||0)+'"></label><label class="form-label"><span>Длительность</span><input type="text" id="ef_duration" value="'+escapeHtml(it.duration||'')+'"></label><label class="form-label"><span>URL фото</span><input type="text" id="ef_image" value="'+escapeHtml(it.image||'')+'"></label><input type="file" accept="image/*" onchange="uploadImage(this,\'ef_image\')" style="margin-bottom:12px;"><div id="ef_preview" style="margin-bottom:12px;">'+(it.image?'<img src="'+it.image+'" style="max-width:100%;max-height:200px;border-radius:8px;">':'')+'</div>';}
   document.getElementById('editModalContent').innerHTML='<h2>Редактировать</h2><form id="editItemForm">'+fields+'<button type="submit" class="btn btn-gold" style="width:100%;">'+SAVE_ICON+'Сохранить</button></form>';
   openModal('editModal');
-  document.getElementById('editItemForm').onsubmit=e=>{e.preventDefault();if(isReview){it.name=document.getElementById('ef_name').value;it.role=document.getElementById('ef_role').value;it.text=document.getElementById('ef_text').value;it.rating=Math.min(5,Math.max(1,parseInt(document.getElementById('ef_rating').value)||5));}else if(isCert){it.title=document.getElementById('ef_title').value;it.price=Number(document.getElementById('ef_price').value)||0;it.image=document.getElementById('ef_image').value;}else{it.title=document.getElementById('ef_title').value;it.short=document.getElementById('ef_short').value;it.full=document.getElementById('ef_full').value;const inc=document.getElementById('ef_includes').value;it.includes=Array.isArray(it.includes)?inc.split('\n').filter(x=>x.trim()):inc;it.price=Number(document.getElementById('ef_price').value)||0;it.duration=document.getElementById('ef_duration').value;it.image=document.getElementById('ef_image').value;}closeModal('editModal');renderAdminSection(section);};
+  document.getElementById('editItemForm').onsubmit=e=>{e.preventDefault();if(isReview){it.name=document.getElementById('ef_name').value;it.role=document.getElementById('ef_role').value;it.text=document.getElementById('ef_text').value;it.rating=Math.min(5,Math.max(1,parseInt(document.getElementById('ef_rating').value)||5));}else if(isCert){it.title=document.getElementById('ef_title').value;it.price=Number(document.getElementById('ef_price').value)||0;it.image=document.getElementById('ef_image').value;}else{it.title=document.getElementById('ef_title').value;it.category=document.getElementById('ef_category').value;it.short=document.getElementById('ef_short').value;it.full=document.getElementById('ef_full').value;const inc=document.getElementById('ef_includes').value;it.includes=Array.isArray(it.includes)?inc.split('\n').filter(x=>x.trim()):inc;it.price=Number(document.getElementById('ef_price').value)||0;it.duration=document.getElementById('ef_duration').value;it.image=document.getElementById('ef_image').value;}closeModal('editModal');renderAdminSection(section);};
 }
 
 async function uploadImage(input,targetId){const f=input.files[0];if(!f)return;const fd=new FormData();fd.append('file',f);const preview=document.getElementById('ef_preview');preview.innerHTML='<p style="color:var(--text-muted);">Загрузка...</p>';try{const r=await fetch(API_URL,{method:'POST',headers:{'X-Admin-Token':getToken()},body:fd});const j=await r.json();if(!r.ok||j.error)throw new Error(j.message||'Ошибка загрузки');document.getElementById(targetId).value=j.url;preview.innerHTML='<img src="'+j.url+'" style="max-width:100%;max-height:200px;border-radius:8px;">';}catch(e){preview.innerHTML='<p style="color:#c0392b;">'+escapeHtml(e.message)+'</p>';}}
