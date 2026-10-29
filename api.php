@@ -1,25 +1,8 @@
 <?php
 /**
- * api.php — прокси между фронтендом, PocketBase, ВК и Telegram.
- * Настройки читаются из .env в той же папке.
+ * api.php — прокси к PocketBase. Настройки — через переменные окружения Railway.
  */
 
-function loadEnv(string $path): void {
-    if (!is_readable($path)) return;
-    foreach (file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
-        $line = trim($line);
-        if ($line === '' || $line[0] === '#') continue;
-        if (strpos($line, '=') === false) continue;
-        [$k, $v] = explode('=', $line, 2);
-        $k = trim($k); $v = trim($v);
-        $len = strlen($v);
-        if ($len >= 2) {
-            $f = $v[0]; $l = $v[$len-1];
-            if (($f === '"' && $l === '"') || ($f === "'" && $l === "'")) $v = substr($v, 1, -1);
-        }
-        if (getenv($k) === false) { putenv("$k=$v"); $_ENV[$k] = $v; }
-    }
-}
 function env(string $k, $default = null) {
     $v = getenv($k);
     return ($v === false || $v === '') ? $default : $v;
@@ -35,34 +18,36 @@ function envArray(string $k): array {
     return array_values(array_filter(array_map('trim', explode(',', $v)), fn($x) => $x !== ''));
 }
 
-loadEnv(__DIR__ . '/.env');
+define('PB_URL',               rtrim(env('PB_URL', 'http://127.0.0.1:8090'), '/'));
+define('PB_ADMIN_TOKEN',       env('PB_ADMIN_TOKEN', ''));
+define('PB_COLLECTION_SITE',   env('PB_COLLECTION_SITE', 'site_data'));
+define('PB_COLLECTION_ORDERS', env('PB_COLLECTION_ORDERS', 'orders'));
+define('PB_COLLECTION_SUBS',   env('PB_COLLECTION_SUBS', 'subscribers'));
 
-define('PB_URL',              env('PB_URL', 'http://127.0.0.1:8090'));
-define('PB_ADMIN_TOKEN',      env('PB_ADMIN_TOKEN', ''));
-define('PB_COLLECTION_SITE',  env('PB_COLLECTION_SITE', 'site_data'));
-define('PB_COLLECTION_ORDERS',env('PB_COLLECTION_ORDERS', 'orders'));
-define('ADMIN_SECRET',        env('ADMIN_SECRET', ''));
+define('ADMIN_SECRET',         env('ADMIN_SECRET', ''));
+define('ADMIN_LOGIN',          env('ADMIN_LOGIN', 'admin'));
+define('ADMIN_PASSWORD',       env('ADMIN_PASSWORD', 'neospa2025'));
 
-define('VK_ACCESS_TOKEN',     env('VK_ACCESS_TOKEN', ''));
-define('VK_API_VERSION',      env('VK_API_VERSION', '5.131'));
+define('VK_ACCESS_TOKEN',      env('VK_ACCESS_TOKEN', ''));
+define('VK_API_VERSION',       env('VK_API_VERSION', '5.131'));
 $vk_peer_ids = array_values(array_filter(array_map('intval', envArray('VK_PEER_IDS'))));
 
-define('TG_BOT_TOKEN',        env('TG_BOT_TOKEN', ''));
-define('TG_API_BASE',         env('TG_API_BASE', ''));
+define('TG_BOT_TOKEN',         env('TG_BOT_TOKEN', ''));
+define('TG_API_BASE',          env('TG_API_BASE', ''));
 $tg_chat_ids = envArray('TG_CHAT_IDS');
 
-define('NOTIFY_VK',           envBool('NOTIFY_VK', true));
-define('NOTIFY_TELEGRAM',     envBool('NOTIFY_TELEGRAM', true));
+define('NOTIFY_VK',            envBool('NOTIFY_VK', true));
+define('NOTIFY_TELEGRAM',      envBool('NOTIFY_TELEGRAM', true));
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: ' . env('ALLOWED_ORIGIN', '*'));
 header('Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, X-Admin-Token');
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
 
 function pbRequest(string $method, string $path, ?array $body = null): array {
-    if (PB_ADMIN_TOKEN === '') throw new RuntimeException('PB_ADMIN_TOKEN не задан в .env');
-    $url = rtrim(PB_URL, '/') . $path;
+    if (PB_ADMIN_TOKEN === '') throw new RuntimeException('PB_ADMIN_TOKEN не задан');
+    $url = PB_URL . $path;
     $ch = curl_init($url);
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
@@ -80,13 +65,13 @@ function pbRequest(string $method, string $path, ?array $body = null): array {
     curl_close($ch);
     if ($response === false) throw new RuntimeException('PB cURL: ' . $err);
     $decoded = json_decode($response, true);
-    if (!is_array($decoded)) throw new RuntimeException('PB invalid JSON');
+    if (!is_array($decoded)) throw new RuntimeException('PB invalid JSON: ' . substr($response,0,200));
     if ($code >= 400) throw new RuntimeException('PB ' . ($decoded['message'] ?? $code));
     return $decoded;
 }
 
 function vkSendMessage(int $peerId, string $message): bool {
-    if (VK_ACCESS_TOKEN === '' || $peerId === 0) { error_log('VK: пустой токен/peer_id'); return false; }
+    if (VK_ACCESS_TOKEN === '' || $peerId === 0) { error_log('VK: пусто'); return false; }
     $params = [
         'access_token' => VK_ACCESS_TOKEN, 'v' => VK_API_VERSION,
         'peer_id' => $peerId, 'message' => $message,
@@ -106,7 +91,7 @@ function vkSendMessage(int $peerId, string $message): bool {
 }
 
 function tgSendMessage($chatId, string $message): bool {
-    if (TG_BOT_TOKEN === '' || $chatId === '' || $chatId === null) { error_log('TG: пустой токен/chat_id'); return false; }
+    if (TG_BOT_TOKEN === '' || $chatId === '' || $chatId === null) { error_log('TG: пусто'); return false; }
     $base = TG_API_BASE !== '' ? rtrim(TG_API_BASE, '/') : 'https://api.telegram.org/bot';
     $url  = $base . TG_BOT_TOKEN . '/sendMessage';
     $params = [
@@ -122,7 +107,7 @@ function tgSendMessage($chatId, string $message): bool {
     $response = curl_exec($ch); $err = curl_error($ch); curl_close($ch);
     if ($response === false) { error_log('TG cURL: ' . $err); return false; }
     $d = json_decode($response, true);
-    if (empty($d['ok'])) { error_log('TG API: ' . $response); return false; }
+    if (empty($d['ok'])) { error_log('TG: ' . $response); return false; }
     return true;
 }
 
@@ -137,7 +122,7 @@ function readJsonBody(): array {
 function requireAdmin(): void {
     if (ADMIN_SECRET === '') {
         http_response_code(503);
-        echo json_encode(['error' => 'ADMIN_SECRET не задан в .env'], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['error' => 'ADMIN_SECRET не задан'], JSON_UNESCAPED_UNICODE);
         exit;
     }
     $token = $_SERVER['HTTP_X_ADMIN_TOKEN'] ?? '';
@@ -148,19 +133,9 @@ function requireAdmin(): void {
     }
 }
 
-function envContacts(): array {
-    return array_filter([
-        'phone'    => env('CONTACT_PHONE', ''),
-        'address'  => env('CONTACT_ADDRESS', ''),
-        'email'    => env('CONTACT_EMAIL', ''),
-        'vk'       => env('CONTACT_VK', ''),
-        'telegram' => env('CONTACT_TELEGRAM', ''),
-        'whatsapp' => env('CONTACT_WHATSAPP', ''),
-    ], fn($v) => $v !== '');
-}
-
 try {
     $method = $_SERVER['REQUEST_METHOD'];
+
     switch ($method) {
 
         case 'GET':
@@ -171,14 +146,8 @@ try {
                     $raw = $r['items'][0]['content'] ?? '{}';
                     $content = json_decode($raw, true) ?: [];
                 }
-            } catch (Throwable $e) { error_log('PB GET: ' . $e->getMessage()); }
-            if (empty($content['contacts']) || !is_array($content['contacts'])) {
-                $ec = envContacts();
-                if (!empty($ec)) {
-                    $content['contacts'] = array_merge([
-                        'phone'=>'','address'=>'','email'=>'','vk'=>'#','telegram'=>'#','whatsapp'=>'#'
-                    ], $ec);
-                }
+            } catch (Throwable $e) {
+                error_log('PB GET: ' . $e->getMessage());
             }
             echo json_encode(['content' => $content ?: new stdClass()], JSON_UNESCAPED_UNICODE);
             break;
@@ -199,6 +168,35 @@ try {
 
         case 'POST':
             $body = readJsonBody();
+            $action = $body['action'] ?? 'order';
+
+            if ($action === 'login') {
+                $login = $body['login'] ?? '';
+                $password = $body['password'] ?? '';
+                if ($login === ADMIN_LOGIN && $password === ADMIN_PASSWORD) {
+                    echo json_encode(['success' => true, 'token' => ADMIN_SECRET], JSON_UNESCAPED_UNICODE);
+                } else {
+                    http_response_code(401);
+                    echo json_encode(['error' => true, 'message' => 'Неверный логин или пароль'], JSON_UNESCAPED_UNICODE);
+                }
+                break;
+            }
+
+            if ($action === 'subscribe') {
+                $email = trim($body['email'] ?? '');
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    throw new RuntimeException('Неверный email');
+                }
+                try {
+                    pbRequest('POST', '/api/collections/' . PB_COLLECTION_SUBS . '/records', ['email' => $email]);
+                } catch (Throwable $e) {
+                    error_log('subscribe: ' . $e->getMessage());
+                    throw new RuntimeException('Не удалось сохранить подписку. Проверьте коллекцию subscribers в PocketBase.');
+                }
+                echo json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
+                break;
+            }
+
             foreach (['type','title','name','phone','social_type','social_contact'] as $f) {
                 if (empty($body[$f])) throw new RuntimeException('Поле "' . $f . '" обязательно');
             }
@@ -214,6 +212,7 @@ try {
                 'datetime'       => $body['datetime'] ?? '',
                 'comment'        => $body['comment'] ?? '',
             ]);
+
             $vkText = "🆕 Новая заявка!\n\n"
                     . "🆔 {$orderId}\n📌 Тип: {$body['type']}\n📝 {$body['title']}\n"
                     . "👤 {$body['name']}\n📞 {$body['phone']}\n"
@@ -238,6 +237,7 @@ try {
                 global $tg_chat_ids;
                 foreach ($tg_chat_ids as $cid) tgSendMessage($cid, $tgText);
             }
+
             echo json_encode(['success' => true, 'order_id' => $orderId], JSON_UNESCAPED_UNICODE);
             break;
 
@@ -245,6 +245,7 @@ try {
             http_response_code(405);
             echo json_encode(['error' => 'Метод не поддерживается'], JSON_UNESCAPED_UNICODE);
     }
+
 } catch (RuntimeException $e) {
     http_response_code(400);
     echo json_encode(['error' => true, 'message' => $e->getMessage()], JSON_UNESCAPED_UNICODE);

@@ -51,6 +51,9 @@ input,select,textarea{font-family:inherit}
 .burger span{display:block;width:18px;height:1.5px;background:var(--zen);position:relative}
 .burger span::before,.burger span::after{content:'';position:absolute;left:0;width:18px;height:1.5px;background:var(--zen);transition:.3s}
 .burger span::before{top:-6px}.burger span::after{top:6px}
+.login-btn{position:absolute;right:24px;display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:100px;background:rgba(251,248,243,.85);backdrop-filter:blur(10px);border:1px solid rgba(184,147,90,.3);color:var(--zen);font-size:.9rem;font-weight:500;transition:var(--transition)}
+.login-btn:hover{background:var(--zen);color:var(--cream);border-color:var(--zen)}
+.login-btn svg{width:16px;height:16px;fill:currentColor}
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 24px 80px;position:relative}
 .hero-tag{font-size:.8rem;text-transform:uppercase;letter-spacing:.25em;color:var(--gold);margin-bottom:24px;font-weight:600}
 .hero h1{font-size:clamp(2.5rem,6vw,5rem);font-weight:400;color:var(--zen);max-width:900px;margin:0 auto 32px}
@@ -107,6 +110,8 @@ section{padding:100px 24px;position:relative}
 .contact-info a{color:var(--gold-light);transition:color .3s}
 .contact-info a:hover{color:var(--white)}
 footer{text-align:center;padding:40px 24px;font-size:.85rem;color:var(--text-muted)}
+footer a{color:var(--gold);text-decoration:underline}
+footer a:hover{color:var(--gold-light)}
 .modal-overlay{position:fixed;inset:0;background:rgba(27,42,47,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;padding:20px}
 .modal-overlay.active{opacity:1;pointer-events:auto}
 .modal{background:var(--white);border-radius:var(--radius);max-width:600px;width:100%;max-height:90vh;overflow-y:auto;padding:32px;position:relative;transform:translateY(20px) scale(.97);transition:transform .3s;-webkit-overflow-scrolling:touch}
@@ -129,6 +134,9 @@ footer{text-align:center;padding:40px 24px;font-size:.85rem;color:var(--text-mut
 .admin-item button:hover{background:var(--zen);color:var(--cream);border-color:var(--zen)}
 .admin-actions{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap}
 .admin-actions button{padding:10px 20px;border-radius:12px;font-size:.9rem;font-weight:600}
+.account-tabs{display:flex;gap:6px;margin-bottom:20px;border-bottom:1px solid var(--cream-dark);padding-bottom:12px}
+.account-tab{padding:8px 16px;border-radius:100px;font-size:.9rem;font-weight:600;border:1px solid var(--cream-dark);background:var(--white);transition:var(--transition)}
+.account-tab.active{background:var(--zen);color:var(--cream);border-color:var(--zen)}
 .reveal{opacity:0;transform:translateY(30px);transition:opacity .8s ease,transform .8s ease}
 .reveal.visible{opacity:1;transform:translateY(0)}
 @media (max-width:900px){
@@ -139,6 +147,8 @@ footer{text-align:center;padding:40px 24px;font-size:.85rem;color:var(--text-mut
   .floating-menu a{padding:12px 16px;border-radius:14px;text-align:center}
   .social-icons{justify-content:center;border-left:none;border-top:1px solid rgba(184,147,90,.3);padding-top:12px;padding-left:0;margin-left:0;margin-top:4px}
   .burger{display:flex}
+  .login-btn{position:absolute;right:76px;padding:8px;width:44px;height:44px;border-radius:50%;justify-content:center}
+  .login-btn span{display:none}
   section{padding:70px 20px}
   .contact-bar{padding:40px 24px;border-radius:20px}
   .modal{padding:24px;border-radius:20px}
@@ -182,6 +192,10 @@ footer{text-align:center;padding:40px 24px;font-size:.85rem;color:var(--text-mut
       </a>
     </div>
   </nav>
+  <button class="login-btn" onclick="openAccount()" aria-label="Личный кабинет">
+    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    <span>Войти</span>
+  </button>
   <button class="burger" id="burger" aria-label="Меню"><span></span></button>
 </header>
 
@@ -301,7 +315,10 @@ footer{text-align:center;padding:40px 24px;font-size:.85rem;color:var(--text-mut
   </div>
 </section>
 
-<footer>© <span id="year"></span> Neo SPA · Санкт-Петербург · Все права защищены</footer>
+<footer>
+  © <span id="year"></span> Neo SPA · Санкт-Петербург · Все права защищены
+  · <a href="#" onclick="openAccount(); return false;">Личный кабинет</a>
+</footer>
 
 <div class="modal-overlay" id="cardModal">
   <div class="modal">
@@ -345,23 +362,43 @@ footer{text-align:center;padding:40px 24px;font-size:.85rem;color:var(--text-mut
   </div>
 </div>
 
+<div class="modal-overlay" id="accountModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('accountModal')">×</button>
+    <h2>Личный кабинет</h2>
+    <div class="account-tabs">
+      <button class="account-tab active" data-tab="subscribe" onclick="switchAccountTab('subscribe')">Подписка</button>
+      <button class="account-tab" data-tab="admin" onclick="switchAccountTab('admin')">Админ</button>
+    </div>
+    <div id="accountSubscribe">
+      <p style="color:var(--text-muted);margin-bottom:16px;">Подпишитесь, чтобы первыми узнавать об акциях, новых программах и специальных предложениях.</p>
+      <form id="subscribeForm">
+        <label class="form-label"><span>Email *</span>
+          <input type="email" name="email" required placeholder="you@example.com" autocapitalize="none" autocorrect="off" spellcheck="false">
+        </label>
+        <button type="submit" class="btn btn-gold" style="width:100%;">Подписаться</button>
+      </form>
+    </div>
+    <div id="accountAdmin" style="display:none;">
+      <p style="color:var(--text-muted);margin-bottom:16px;">Вход для администратора сайта.</p>
+      <form id="adminLoginForm">
+        <label class="form-label"><span>Логин</span>
+          <input type="text" name="login" required autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="username">
+        </label>
+        <label class="form-label"><span>Пароль</span>
+          <input type="password" name="password" required autocomplete="current-password">
+        </label>
+        <button type="submit" class="btn btn-gold" style="width:100%;">Войти</button>
+      </form>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="adminModal">
   <div class="modal" style="max-width:820px;">
     <button class="modal-close" onclick="closeModal('adminModal')">×</button>
     <h2>Админ-панель</h2>
-    <div id="adminLoginBlock">
-      <label class="form-label"><span>Логин</span>
-        <input type="text" id="adminLogin" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="username">
-      </label>
-      <label class="form-label"><span>Пароль</span>
-        <input type="password" id="adminPassword" autocomplete="current-password">
-      </label>
-      <button class="btn btn-gold" style="width:100%;margin-top:12px;" onclick="adminLogin()">Войти</button>
-      <p style="font-size:.8rem;color:var(--text-muted);margin-top:12px;text-align:center;">
-        По умолчанию: <b>admin</b> / <b>neospa2025</b>
-      </p>
-    </div>
-    <div id="adminPanelBlock" style="display:none;">
+    <div id="adminPanelBlock">
       <div class="admin-tabs" id="adminTabs"></div>
       <div id="adminContent"></div>
     </div>
@@ -369,107 +406,81 @@ footer{text-align:center;padding:40px 24px;font-size:.85rem;color:var(--text-mut
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════════════
-//  КОНФИГ
-// ═══════════════════════════════════════════════════════════════
 const API_URL = '/api.php';
-const ADMIN_LOGIN = 'admin';
-const ADMIN_PASSWORD = 'neospa2025';
-const ADMIN_SECRET = 'ЗАМЕНИТЕ_НА_ТОТ_ЖЕ_ТОКЕН_ЧТО_В_ENV';
 const ADMIN_STORAGE_KEY = 'neospa_admin_token';
 
-// ═══════════════════════════════════════════════════════════════
-//  ВСТРОЕННЫЕ SVG-ЗАГЛУШКИ ДЛЯ ФОТО
-//  Работают без интернета — картинка "рисуется" прямо в браузере.
-//  Когда появятся свои фото — см. блок "ВАШИ ФОТО" ниже.
-// ═══════════════════════════════════════════════════════════════
-function svgImg(title, subtitle = 'NEO SPA') {
+function svgImg(title, subtitle) {
+  subtitle = subtitle || 'NEO SPA';
   const esc = (s) => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  const s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
-    <defs>
-      <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#1b2a2f"/>
-        <stop offset="1" stop-color="#243a40"/>
-      </linearGradient>
-    </defs>
-    <rect width="800" height="600" fill="url(#g)"/>
-    <circle cx="400" cy="250" r="90" fill="none" stroke="#b8935a" stroke-width="1.5" opacity="0.5"/>
-    <circle cx="400" cy="250" r="60" fill="none" stroke="#b8935a" stroke-width="1" opacity="0.35"/>
-    <circle cx="400" cy="250" r="3" fill="#b8935a"/>
-    <line x1="400" y1="160" x2="400" y2="340" stroke="#b8935a" stroke-width="0.8" opacity="0.3"/>
-    <line x1="310" y1="250" x2="490" y2="250" stroke="#b8935a" stroke-width="0.8" opacity="0.3"/>
-    <text x="400" y="410" font-family="Georgia, 'Times New Roman', serif" font-size="42" fill="#c9a76e" text-anchor="middle" font-style="italic">${esc(title)}</text>
-    <text x="400" y="455" font-family="Arial, sans-serif" font-size="13" fill="#b8935a" text-anchor="middle" letter-spacing="4" opacity="0.7">${esc(subtitle)}</text>
-  </svg>`;
+  const s = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">'
+    + '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">'
+    + '<stop offset="0" stop-color="#1b2a2f"/><stop offset="1" stop-color="#243a40"/>'
+    + '</linearGradient></defs>'
+    + '<rect width="800" height="600" fill="url(#g)"/>'
+    + '<circle cx="400" cy="250" r="90" fill="none" stroke="#b8935a" stroke-width="1.5" opacity="0.5"/>'
+    + '<circle cx="400" cy="250" r="60" fill="none" stroke="#b8935a" stroke-width="1" opacity="0.35"/>'
+    + '<circle cx="400" cy="250" r="3" fill="#b8935a"/>'
+    + '<line x1="400" y1="160" x2="400" y2="340" stroke="#b8935a" stroke-width="0.8" opacity="0.3"/>'
+    + '<line x1="310" y1="250" x2="490" y2="250" stroke="#b8935a" stroke-width="0.8" opacity="0.3"/>'
+    + '<text x="400" y="410" font-family="Georgia, serif" font-size="42" fill="#c9a76e" text-anchor="middle" font-style="italic">' + esc(title) + '</text>'
+    + '<text x="400" y="455" font-family="Arial, sans-serif" font-size="13" fill="#b8935a" text-anchor="middle" letter-spacing="4" opacity="0.7">' + esc(subtitle) + '</text>'
+    + '</svg>';
   return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(s);
 }
 
-// ─── ВАШИ ФОТО (когда появятся — замени блок IMG ниже на этот) ───
-// const IMG = {
-//   spa:     'assets/spa.jpg',
-//   massage: 'assets/massage.jpg',
-//   face:    'assets/face.jpg',
-//   hair:    'assets/hair.jpg',
-//   zen:     'assets/zen.jpg',
-//   gift:    'assets/gift.jpg',
-//   cert:    'assets/certificate.jpg'
-// };
-
 const IMG = {
-  spa:     svgImg('Head SPA',          'МАССАЖ ГОЛОВЫ'),
-  massage: svgImg('Массаж',            'РИТУАЛ ДЛЯ ТЕЛА'),
-  face:    svgImg('Japanese Face',     'УХОД ЗА ЛИЦОМ'),
-  hair:    svgImg('Уход за волосами',  'ВОССТАНОВЛЕНИЕ'),
-  zen:     svgImg('Три-комплекс',      'КОМПЛЕКС'),
-  gift:    svgImg('Подарок',           'СЕРТИФИКАТ'),
-  cert:    svgImg('Сертификат',        'NEO SPA')
+  spa:     svgImg('Head SPA', 'МАССАЖ ГОЛОВЫ'),
+  massage: svgImg('Массаж', 'РИТУАЛ ДЛЯ ТЕЛА'),
+  face:    svgImg('Japanese Face', 'УХОД ЗА ЛИЦОМ'),
+  hair:    svgImg('Уход за волосами', 'ВОССТАНОВЛЕНИЕ'),
+  zen:     svgImg('Три-комплекс', 'КОМПЛЕКС'),
+  gift:    svgImg('Подарок', 'СЕРТИФИКАТ'),
+  cert:    svgImg('Сертификат', 'NEO SPA')
 };
-
 const FALLBACK_IMG = svgImg('Neo SPA', 'ФОТО СКОРО');
 
-// ─── ВИДЕО ───
-// Сейчас — SVG-постеры. Когда в assets/ появятся mp4 с нужными именами,
-// они начнут проигрываться при наведении автоматически.
-function svgPoster(label) { return svgImg(label, 'NEO SPA · СПБ'); }
+function safeImg(src, fallbackKey) {
+  if (!src || typeof src !== 'string') return IMG[fallbackKey] || FALLBACK_IMG;
+  if (src.startsWith('assets/')) return IMG[fallbackKey] || FALLBACK_IMG;
+  if (src.startsWith('data:') || src.startsWith('http')) return src;
+  return IMG[fallbackKey] || FALLBACK_IMG;
+}
 
 const VIDEOS = [
-  { label:'Head SPA',      src:'assets/17517719915121.mp4',  poster: svgPoster('Head SPA') },
-  { label:'Japanese Face', src:'assets/18668359584372.mp4',  poster: svgPoster('Japanese Face') },
-  { label:'Tokyo Ritual',  src:'assets/19164721121947_1.mp4',poster: svgPoster('Tokyo Ritual') },
-  { label:'Deep Care',     src:'assets/19579949353532_1.mp4',poster: svgPoster('Deep Care') }
+  { label:'Head SPA',      src:'assets/17517719915121.mp4',  poster: svgImg('Head SPA', 'NEO SPA · СПБ') },
+  { label:'Japanese Face', src:'assets/18668359584372.mp4',  poster: svgImg('Japanese Face', 'NEO SPA · СПБ') },
+  { label:'Tokyo Ritual',  src:'assets/19164721121947_1.mp4',poster: svgImg('Tokyo Ritual', 'NEO SPA · СПБ') },
+  { label:'Deep Care',     src:'assets/19579949353532_1.mp4',poster: svgImg('Deep Care', 'NEO SPA · СПБ') }
 ];
 
-// ═══════════════════════════════════════════════════════════════
-//  ДАННЫЕ ПО УМОЛЧАНИЮ
-// ═══════════════════════════════════════════════════════════════
 const DEFAULT_DATA = {
   services: [
-    {id:'s1', title:'Barber&Head SPA', short:'Мужской ритуал для головы и бороды', full:'Глубокое очищение, массаж головы и уход за бородой. Идеально для мужчин, ценящих порядок и расслабление.', includes:'Очищение · Массаж головы · Уход за бородой · Тонизирование', price:4500, duration:'60 мин', image:IMG.hair},
-    {id:'s2', title:'Classic Head SPA', short:'Классический ритуал для головы', full:'Мягкое очищение кожи головы, пилинг и расслабляющий массаж. Восстанавливает баланс и снимает стресс.', includes:'Пилинг · Массаж · Маска · Ароматерапия', price:3900, duration:'60 мин', image:IMG.spa},
-    {id:'s3', title:'Japanese Face', short:'Японский уход за лицом', full:'Ритуал с использованием традиционных японских техник: глубокое очищение, массаж лица и питательная маска.', includes:'Очищение · Массаж Кобидо · Маска · Увлажнение', price:5200, duration:'75 мин', image:IMG.face},
-    {id:'s4', title:'Tokyo Head SPA', short:'Токийский ритуал для головы', full:'Комплексная программа: пилинг, массаж, уход за волосами. Вдохновлено ритуалами Токио.', includes:'Пилинг · Массаж · Уход за волосами · Ароматерапия', price:4800, duration:'70 мин', image:IMG.massage},
-    {id:'s5', title:'T-SHOCK', short:'Интенсивное восстановление волос', full:'Процедура для укрепления волос и стимуляции роста. Результат заметен после первого сеанса.', includes:'Скраб · Сыворотка · Массаж · Тонизирование', price:5600, duration:'60 мин', image:IMG.hair},
-    {id:'s6', title:'Deep Care Tokio Inkarami', short:'Глубокий уход Inkarami', full:'Японская система восстановления волос Inkarami. Глубокое питание и реконструкция структуры.', includes:'Очищение · Inkarami · Маска · Уход', price:6800, duration:'90 мин', image:IMG.spa},
-    {id:'s7', title:'Три-комплекс', short:'Комплекс из трёх процедур', full:'Три процедуры в одном сеансе: очищение, питание и восстановление. Максимальный результат.', includes:'Очищение · Питание · Восстановление', price:7500, duration:'120 мин', image:IMG.zen},
-    {id:'s8', title:'Selvert Thermal', short:'Термальный уход Selvert', full:'Профессиональный уход Selvert Thermal. Термальная маска и питательные компоненты.', includes:'Термальная маска · Питание · Уход', price:6200, duration:'80 мин', image:IMG.massage}
+    {id:'s1', title:'Barber&Head SPA', short:'Мужской ритуал для головы и бороды', full:'Глубокое очищение, массаж головы и уход за бородой. Идеально для мужчин, ценящих порядок и расслабление.', includes:'Очищение · Массаж головы · Уход за бородой · Тонизирование', price:4500, duration:'60 мин', image:'', _k:'hair'},
+    {id:'s2', title:'Classic Head SPA', short:'Классический ритуал для головы', full:'Мягкое очищение кожи головы, пилинг и расслабляющий массаж. Восстанавливает баланс и снимает стресс.', includes:'Пилинг · Массаж · Маска · Ароматерапия', price:3900, duration:'60 мин', image:'', _k:'spa'},
+    {id:'s3', title:'Japanese Face', short:'Японский уход за лицом', full:'Ритуал с использованием традиционных японских техник: глубокое очищение, массаж лица и питательная маска.', includes:'Очищение · Массаж Кобидо · Маска · Увлажнение', price:5200, duration:'75 мин', image:'', _k:'face'},
+    {id:'s4', title:'Tokyo Head SPA', short:'Токийский ритуал для головы', full:'Комплексная программа: пилинг, массаж, уход за волосами. Вдохновлено ритуалами Токио.', includes:'Пилинг · Массаж · Уход за волосами · Ароматерапия', price:4800, duration:'70 мин', image:'', _k:'massage'},
+    {id:'s5', title:'T-SHOCK', short:'Интенсивное восстановление волос', full:'Процедура для укрепления волос и стимуляции роста. Результат заметен после первого сеанса.', includes:'Скраб · Сыворотка · Массаж · Тонизирование', price:5600, duration:'60 мин', image:'', _k:'hair'},
+    {id:'s6', title:'Deep Care Tokio Inkarami', short:'Глубокий уход Inkarami', full:'Японская система восстановления волос Inkarami. Глубокое питание и реконструкция структуры.', includes:'Очищение · Inkarami · Маска · Уход', price:6800, duration:'90 мин', image:'', _k:'spa'},
+    {id:'s7', title:'Три-комплекс', short:'Комплекс из трёх процедур', full:'Три процедуры в одном сеансе: очищение, питание и восстановление. Максимальный результат.', includes:'Очищение · Питание · Восстановление', price:7500, duration:'120 мин', image:'', _k:'zen'},
+    {id:'s8', title:'Selvert Thermal', short:'Термальный уход Selvert', full:'Профессиональный уход Selvert Thermal. Термальная маска и питательные компоненты.', includes:'Термальная маска · Питание · Уход', price:6200, duration:'80 мин', image:'', _k:'massage'}
   ],
   subscriptions: [
-    {id:'sub1', title:'Tokyo Head SPA', short:'Абонемент на 4, 6 или 10 процедур', full:'Регулярные сеансы Tokyo Head SPA по выгодной цене. Экономия до 20%.', includes:['4 процедуры — 17 500 ₽','6 процедур — 24 900 ₽','10 процедур — 39 900 ₽'], price:17500, duration:'70 мин × N', image:IMG.massage},
-    {id:'sub2', title:'Japanese Face', short:'Абонемент на 4, 6 или 10 процедур', full:'Курс японского ухода за лицом. Стойкий результат при регулярном применении.', includes:['4 процедуры — 18 900 ₽','6 процедур — 26 900 ₽','10 процедур — 43 900 ₽'], price:18900, duration:'75 мин × N', image:IMG.face},
-    {id:'sub3', title:'Classic Head SPA', short:'Абонемент на 4, 6 или 10 процедур', full:'Классический уход за головой курсом. Идеально для поддержания баланса.', includes:['4 процедуры — 13 900 ₽','6 процедур — 19 900 ₽','10 процедур — 31 900 ₽'], price:13900, duration:'60 мин × N', image:IMG.spa}
+    {id:'sub1', title:'Tokyo Head SPA', short:'Абонемент на 4, 6 или 10 процедур', full:'Регулярные сеансы Tokyo Head SPA по выгодной цене. Экономия до 20%.', includes:['4 процедуры — 17 500 ₽','6 процедур — 24 900 ₽','10 процедур — 39 900 ₽'], price:17500, duration:'70 мин × N', image:'', _k:'massage'},
+    {id:'sub2', title:'Japanese Face', short:'Абонемент на 4, 6 или 10 процедур', full:'Курс японского ухода за лицом. Стойкий результат при регулярном применении.', includes:['4 процедуры — 18 900 ₽','6 процедур — 26 900 ₽','10 процедур — 43 900 ₽'], price:18900, duration:'75 мин × N', image:'', _k:'face'},
+    {id:'sub3', title:'Classic Head SPA', short:'Абонемент на 4, 6 или 10 процедур', full:'Классический уход за головой курсом. Идеально для поддержания баланса.', includes:['4 процедуры — 13 900 ₽','6 процедур — 19 900 ₽','10 процедур — 31 900 ₽'], price:13900, duration:'60 мин × N', image:'', _k:'spa'}
   ],
   certificates: [
-    {id:'c3000',  title:'Сертификат 3 000 ₽',  price:3000,  image:IMG.cert},
-    {id:'c5000',  title:'Сертификат 5 000 ₽',  price:5000,  image:IMG.cert},
-    {id:'c7000',  title:'Сертификат 7 000 ₽',  price:7000,  image:IMG.cert},
-    {id:'c10000', title:'Сертификат 10 000 ₽', price:10000, image:IMG.cert},
-    {id:'c15000', title:'Сертификат 15 000 ₽', price:15000, image:IMG.cert},
-    {id:'c18000', title:'Сертификат 18 000 ₽', price:18000, image:IMG.cert},
-    {id:'c20000', title:'Сертификат 20 000 ₽', price:20000, image:IMG.cert},
-    {id:'c25000', title:'Сертификат 25 000 ₽', price:25000, image:IMG.cert},
-    {id:'csub1', title:'Сертификат на Tokyo Head SPA',   price:17500, image:IMG.gift},
-    {id:'csub2', title:'Сертификат на Japanese Face',    price:18900, image:IMG.gift},
-    {id:'csub3', title:'Сертификат на Classic Head SPA', price:13900, image:IMG.gift}
+    {id:'c3000',  title:'Сертификат 3 000 ₽',  price:3000,  image:'', _k:'cert'},
+    {id:'c5000',  title:'Сертификат 5 000 ₽',  price:5000,  image:'', _k:'cert'},
+    {id:'c7000',  title:'Сертификат 7 000 ₽',  price:7000,  image:'', _k:'cert'},
+    {id:'c10000', title:'Сертификат 10 000 ₽', price:10000, image:'', _k:'cert'},
+    {id:'c15000', title:'Сертификат 15 000 ₽', price:15000, image:'', _k:'cert'},
+    {id:'c18000', title:'Сертификат 18 000 ₽', price:18000, image:'', _k:'cert'},
+    {id:'c20000', title:'Сертификат 20 000 ₽', price:20000, image:'', _k:'cert'},
+    {id:'c25000', title:'Сертификат 25 000 ₽', price:25000, image:'', _k:'cert'},
+    {id:'csub1', title:'Сертификат на Tokyo Head SPA',   price:17500, image:'', _k:'gift'},
+    {id:'csub2', title:'Сертификат на Japanese Face',    price:18900, image:'', _k:'gift'},
+    {id:'csub3', title:'Сертификат на Classic Head SPA', price:13900, image:'', _k:'gift'}
   ],
   reviews: [
     {id:'r1', name:'Анна', role:'Постоянный гость', text:'Невероятная атмосфера и профессионализм. После Tokyo Head SPA чувствую себя обновлённой. Обязательно вернусь!', rating:5},
@@ -485,9 +496,6 @@ const DEFAULT_DATA = {
 };
 let siteData = JSON.parse(JSON.stringify(DEFAULT_DATA));
 
-// ═══════════════════════════════════════════════════════════════
-//  ИНИЦИАЛИЗАЦИЯ
-// ═══════════════════════════════════════════════════════════════
 (function initParticles(){
   const c = document.getElementById('particles');
   for (let i=0;i<20;i++){
@@ -504,17 +512,14 @@ let siteData = JSON.parse(JSON.stringify(DEFAULT_DATA));
 function renderVideos(){
   const c = document.getElementById('videoCarousel');
   if (!c) return;
-  c.innerHTML = VIDEOS.map(v => `
-    <div class="video-card">
-      <video muted loop playsinline preload="metadata" poster="${v.poster}"
-             onmouseover="this.play()" onmouseout="this.pause()"
-             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-        <source src="${v.src}" type="video/mp4">
-      </video>
-      <div class="video-fallback" style="display:none;background-image:url('${v.poster}')"></div>
-      <div class="video-label">${escapeHtml(v.label)}</div>
-    </div>
-  `).join('');
+  c.innerHTML = VIDEOS.map(v => '<div class="video-card">'
+    + '<video muted loop playsinline preload="metadata" poster="' + v.poster + '" '
+    + 'onmouseover="this.play()" onmouseout="this.pause()" '
+    + 'onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';">'
+    + '<source src="' + v.src + '" type="video/mp4"></video>'
+    + '<div class="video-fallback" style="display:none;background-image:url(\'' + v.poster + '\')"></div>'
+    + '<div class="video-label">' + escapeHtml(v.label) + '</div></div>'
+  ).join('');
 }
 renderVideos();
 
@@ -539,16 +544,24 @@ document.querySelectorAll('#floatingMenu a').forEach(a=>{
   a.addEventListener('click',()=>document.getElementById('floatingMenu').classList.remove('open'));
 });
 
-// ═══════════════════════════════════════════════════════════════
-//  ДАННЫЕ
-// ═══════════════════════════════════════════════════════════════
 async function loadSiteData(){
   try {
     const r=await fetch(API_URL,{method:'GET'});
     if (!r.ok) throw new Error('HTTP '+r.status);
     const j=await r.json();
-    if (j.content && Object.keys(j.content).length) siteData={...siteData,...j.content};
-  } catch(e){ console.warn('Fallback (нет api.php — это нормально для локального просмотра):',e.message); }
+    if (j.content && Object.keys(j.content).length) {
+      const merged = {...siteData, ...j.content};
+      ['services','subscriptions','certificates'].forEach(key => {
+        if (Array.isArray(merged[key])) {
+          merged[key] = merged[key].map((item, idx) => {
+            const def = siteData[key][idx] || {};
+            return { ...def, ...item, _k: def._k || item._k };
+          });
+        }
+      });
+      siteData = merged;
+    }
+  } catch(e){ console.warn('Fallback:',e.message); }
   renderAll();
 }
 
@@ -558,59 +571,43 @@ function renderAll(){
   renderCards('certificatesGrid',siteData.certificates,'certificate');
   renderReviews(); renderContacts();
 }
-
 function renderCards(id, items, type){
   const g=document.getElementById(id); if(!g) return;
-  g.innerHTML=items.map(i=>`
-    <article class="card reveal" onclick="openCardModal('${type}','${i.id}')">
-      <div class="card-img">
-        <img src="${i.image || FALLBACK_IMG}" alt="${escapeHtml(i.title)}" loading="lazy" onerror="this.src=FALLBACK_IMG">
-      </div>
-      <div class="card-body">
-        <h3>${escapeHtml(i.title)}</h3>
-        <p>${escapeHtml(i.short||'')}</p>
-        <div class="card-footer">
-          <span class="price">${i.price?i.price.toLocaleString('ru-RU')+' ₽':''}</span>
-          ${i.duration?`<span class="duration">${escapeHtml(i.duration)}</span>`:''}
-        </div>
-      </div>
-    </article>`).join('');
+  g.innerHTML=items.map(i=>{
+    const src = safeImg(i.image, i._k);
+    return '<article class="card reveal" onclick="openCardModal(\''+type+'\',\''+i.id+'\')">'
+      + '<div class="card-img"><img src="'+src+'" alt="'+escapeHtml(i.title)+'" loading="lazy"></div>'
+      + '<div class="card-body"><h3>'+escapeHtml(i.title)+'</h3><p>'+escapeHtml(i.short||'')+'</p>'
+      + '<div class="card-footer"><span class="price">'+(i.price?i.price.toLocaleString('ru-RU')+' ₽':'')+'</span>'
+      + (i.duration?'<span class="duration">'+escapeHtml(i.duration)+'</span>':'')+'</div></div></article>';
+  }).join('');
   g.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
 }
-
 function renderReviews(){
   const g=document.getElementById('reviewsGrid'); if(!g) return;
-  g.innerHTML=siteData.reviews.map(r=>`
-    <article class="review-card reveal">
-      <div class="review-stars">${'★'.repeat(r.rating||5)}</div>
-      <p class="review-text">«${escapeHtml(r.text)}»</p>
-      <div class="review-author">${escapeHtml(r.name)}</div>
-      <div class="review-role">${escapeHtml(r.role||'')}</div>
-    </article>`).join('');
+  g.innerHTML=siteData.reviews.map(r=>'<article class="review-card reveal">'
+    + '<div class="review-stars">' + '★'.repeat(r.rating||5) + '</div>'
+    + '<p class="review-text">«' + escapeHtml(r.text) + '»</p>'
+    + '<div class="review-author">' + escapeHtml(r.name) + '</div>'
+    + '<div class="review-role">' + escapeHtml(r.role||'') + '</div></article>'
+  ).join('');
   g.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
 }
-
 function renderContacts(){
   const c=siteData.contacts||{};
   document.querySelectorAll('[data-contact="phone"]').forEach(el=>{
-    el.textContent=c.phone;
-    el.href='tel:'+(c.phone||'').replace(/[^\d+]/g,'');
+    el.textContent=c.phone; el.href='tel:'+(c.phone||'').replace(/[^\d+]/g,'');
   });
   document.querySelectorAll('[data-contact="address"]').forEach(el=>el.textContent=c.address||'');
   document.querySelectorAll('[data-contact="email"]').forEach(el=>{
-    el.textContent=c.email||'';
-    el.href='mailto:'+(c.email||'');
+    el.textContent=c.email||''; el.href='mailto:'+(c.email||'');
   });
   document.querySelectorAll('[data-social]').forEach(el=>{
     const s=el.dataset.social; if (c[s] && c[s]!=='#') el.href=c[s];
   });
 }
-
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
 
-// ═══════════════════════════════════════════════════════════════
-//  МОДАЛКИ
-// ═══════════════════════════════════════════════════════════════
 function openModal(id){ document.getElementById(id).classList.add('active'); document.body.style.overflow='hidden'; }
 function closeModal(id){ document.getElementById(id).classList.remove('active'); document.body.style.overflow=''; }
 document.querySelectorAll('.modal-overlay').forEach(o=>{
@@ -622,19 +619,17 @@ function openCardModal(type,id){
   const it=list.find(x=>String(x.id)===String(id)); if(!it) return;
   let inc='';
   if (it.includes){
-    if (Array.isArray(it.includes)) inc='<ul style="padding-left:0;list-style:none;margin:16px 0;">'+it.includes.map(i=>`<li style="padding:6px 0;">✓ ${escapeHtml(i)}</li>`).join('')+'</ul>';
-    else inc=`<p style="color:var(--text-muted);margin:16px 0;">${escapeHtml(it.includes)}</p>`;
+    if (Array.isArray(it.includes)) inc='<ul style="padding-left:0;list-style:none;margin:16px 0;">'+it.includes.map(i=>'<li style="padding:6px 0;">✓ '+escapeHtml(i)+'</li>').join('')+'</ul>';
+    else inc='<p style="color:var(--text-muted);margin:16px 0;">'+escapeHtml(it.includes)+'</p>';
   }
-  document.getElementById('cardModalContent').innerHTML=`
-    <img class="modal-img" src="${it.image || FALLBACK_IMG}" alt="${escapeHtml(it.title)}" onerror="this.src=FALLBACK_IMG">
-    <h2>${escapeHtml(it.title)}</h2>
-    <p style="color:var(--text-muted);margin-bottom:12px;">${escapeHtml(it.full||it.short||'')}</p>
-    ${inc}
-    ${it.price?`<p style="margin-top:16px;"><strong>Цена:</strong> ${it.price.toLocaleString('ru-RU')} ₽</p>`:''}
-    ${it.duration?`<p><strong>Длительность:</strong> ${escapeHtml(it.duration)}</p>`:''}
-    <button class="btn btn-gold" style="width:100%;margin-top:20px;" onclick="openBooking('${type}','${it.id}')">
-      ${type==='certificate'?'Купить':'Записаться'}
-    </button>`;
+  const src = safeImg(it.image, it._k);
+  document.getElementById('cardModalContent').innerHTML='<img class="modal-img" src="'+src+'" alt="'+escapeHtml(it.title)+'">'
+    + '<h2>'+escapeHtml(it.title)+'</h2>'
+    + '<p style="color:var(--text-muted);margin-bottom:12px;">'+escapeHtml(it.full||it.short||'')+'</p>'
+    + inc
+    + (it.price?'<p style="margin-top:16px;"><strong>Цена:</strong> '+it.price.toLocaleString('ru-RU')+' ₽</p>':'')
+    + (it.duration?'<p><strong>Длительность:</strong> '+escapeHtml(it.duration)+'</p>':'')
+    + '<button class="btn btn-gold" style="width:100%;margin-top:20px;" onclick="openBooking(\''+type+'\',\''+it.id+'\')">'+(type==='certificate'?'Купить':'Записаться')+'</button>';
   openModal('cardModal');
 }
 
@@ -649,9 +644,6 @@ function openBooking(type,itemId){
   closeModal('cardModal'); openModal('bookingModal');
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  ФОРМА ЗАЯВКИ
-// ═══════════════════════════════════════════════════════════════
 document.getElementById('bookingForm').addEventListener('submit', async (e)=>{
   e.preventDefault();
   const form=e.target;
@@ -667,35 +659,93 @@ document.getElementById('bookingForm').addEventListener('submit', async (e)=>{
     if (!r.ok||j.error) throw new Error(j.message||'Ошибка');
     alert('✅ Заявка принята!\nНомер: '+j.order_id+'\nМы свяжемся с вами в ближайшее время.');
     form.reset(); closeModal('bookingModal');
-  }catch(err){
-    alert('❌ Не удалось отправить: '+err.message+'\n\n(Локально без PHP-сервера это ожидаемо. Для теста формы запустите php -S localhost:8000)');
-  }
+  }catch(err){ alert('❌ Не удалось отправить: '+err.message); }
   finally{ btn.disabled=false; btn.textContent=orig; }
 });
 
-// ═══════════════════════════════════════════════════════════════
-//  АДМИНКА
-// ═══════════════════════════════════════════════════════════════
+function openAccount(){
+  if (localStorage.getItem(ADMIN_STORAGE_KEY)) {
+    openAdmin();
+    return;
+  }
+  openModal('accountModal');
+  switchAccountTab('subscribe');
+}
+
+function switchAccountTab(tab){
+  document.querySelectorAll('.account-tab').forEach(b=>{
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+  document.getElementById('accountSubscribe').style.display = tab === 'subscribe' ? 'block' : 'none';
+  document.getElementById('accountAdmin').style.display = tab === 'admin' ? 'block' : 'none';
+}
+
+document.getElementById('subscribeForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const form=e.target;
+  const email = form.querySelector('input[name="email"]').value.trim();
+  const btn = form.querySelector('button[type="submit"]');
+  const orig = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Отправка...';
+  try{
+    const r = await fetch(API_URL, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({action:'subscribe', email})
+    });
+    const j = await r.json();
+    if (!r.ok || j.error) throw new Error(j.message || 'Ошибка');
+    alert('✅ Вы подписаны! Спасибо.');
+    form.reset();
+    closeModal('accountModal');
+  }catch(err){
+    alert('❌ Не удалось подписаться: ' + err.message);
+  }finally{
+    btn.disabled = false; btn.textContent = orig;
+  }
+});
+
+document.getElementById('adminLoginForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const form=e.target;
+  const login = form.querySelector('input[name="login"]').value.trim();
+  const password = form.querySelector('input[name="password"]').value;
+  const btn = form.querySelector('button[type="submit"]');
+  const orig = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Проверка...';
+  try{
+    const r = await fetch(API_URL, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({action:'login', login, password})
+    });
+    const j = await r.json();
+    if (!r.ok || j.error) throw new Error(j.message || 'Неверный логин или пароль');
+    if (!j.token) throw new Error('Сервер не вернул токен');
+    localStorage.setItem(ADMIN_STORAGE_KEY, j.token);
+    form.reset();
+    closeModal('accountModal');
+    openAdmin();
+  }catch(err){
+    alert('❌ ' + err.message);
+  }finally{
+    btn.disabled = false; btn.textContent = orig;
+  }
+});
+
 function openAdmin(){
+  if (!localStorage.getItem(ADMIN_STORAGE_KEY)) {
+    openModal('accountModal');
+    switchAccountTab('admin');
+    return;
+  }
   openModal('adminModal');
-  if (localStorage.getItem(ADMIN_STORAGE_KEY)) showAdminPanel();
-}
-function adminLogin(){
-  const l=document.getElementById('adminLogin').value.trim();
-  const p=document.getElementById('adminPassword').value;
-  if (l===ADMIN_LOGIN && p===ADMIN_PASSWORD){
-    localStorage.setItem(ADMIN_STORAGE_KEY,ADMIN_SECRET);
-    showAdminPanel();
-  } else alert('Неверный логин или пароль');
-}
-function showAdminPanel(){
-  document.getElementById('adminLoginBlock').style.display='none';
-  document.getElementById('adminPanelBlock').style.display='block';
   renderAdminTabs();
 }
+
 function renderAdminTabs(){
   const tabs=[{id:'services',label:'Услуги'},{id:'subscriptions',label:'Абонементы'},{id:'certificates',label:'Сертификаты'},{id:'reviews',label:'Отзывы'},{id:'contacts',label:'Контакты'}];
-  document.getElementById('adminTabs').innerHTML=tabs.map(t=>`<button class="admin-tab" data-tab="${t.id}" onclick="renderAdminSection('${t.id}')">${t.label}</button>`).join('');
+  document.getElementById('adminTabs').innerHTML=tabs.map(t=>'<button class="admin-tab" data-tab="'+t.id+'" onclick="renderAdminSection(\''+t.id+'\')">'+t.label+'</button>').join('');
   renderAdminSection('services');
 }
 function renderAdminSection(section){
@@ -703,32 +753,26 @@ function renderAdminSection(section){
   const c=document.getElementById('adminContent');
   if (section==='contacts'){
     const ct=siteData.contacts||{};
-    c.innerHTML=`
-      <label class="form-label"><span>Телефон</span><input type="text" id="cf_phone" value="${escapeHtml(ct.phone||'')}"></label>
-      <label class="form-label"><span>Адрес</span><input type="text" id="cf_address" value="${escapeHtml(ct.address||'')}"></label>
-      <label class="form-label"><span>Email</span><input type="text" id="cf_email" value="${escapeHtml(ct.email||'')}" autocapitalize="none" autocorrect="off"></label>
-      <label class="form-label"><span>ВКонтакте</span><input type="text" id="cf_vk" value="${escapeHtml(ct.vk||'')}" autocapitalize="none" autocorrect="off"></label>
-      <label class="form-label"><span>Telegram</span><input type="text" id="cf_telegram" value="${escapeHtml(ct.telegram||'')}" autocapitalize="none" autocorrect="off"></label>
-      <label class="form-label"><span>WhatsApp</span><input type="text" id="cf_whatsapp" value="${escapeHtml(ct.whatsapp||'')}" autocapitalize="none" autocorrect="off"></label>
-      <div class="admin-actions"><button class="btn btn-gold" onclick="saveContacts()">💾 Сохранить контакты</button></div>`;
+    c.innerHTML='<label class="form-label"><span>Телефон</span><input type="text" id="cf_phone" value="'+escapeHtml(ct.phone||'')+'"></label>'
+      + '<label class="form-label"><span>Адрес</span><input type="text" id="cf_address" value="'+escapeHtml(ct.address||'')+'"></label>'
+      + '<label class="form-label"><span>Email</span><input type="text" id="cf_email" value="'+escapeHtml(ct.email||'')+'"></label>'
+      + '<label class="form-label"><span>ВКонтакте</span><input type="text" id="cf_vk" value="'+escapeHtml(ct.vk||'')+'"></label>'
+      + '<label class="form-label"><span>Telegram</span><input type="text" id="cf_telegram" value="'+escapeHtml(ct.telegram||'')+'"></label>'
+      + '<label class="form-label"><span>WhatsApp</span><input type="text" id="cf_whatsapp" value="'+escapeHtml(ct.whatsapp||'')+'"></label>'
+      + '<div class="admin-actions"><button class="btn btn-gold" onclick="saveContacts()">💾 Сохранить контакты</button>'
+      + '<button class="btn btn-outline" onclick="adminLogout()">Выйти</button></div>';
     return;
   }
   const items=siteData[section]||[];
-  c.innerHTML=`
-    <div style="max-height:45vh;overflow-y:auto;">
-      ${items.length===0?'<p style="padding:20px;text-align:center;color:var(--text-muted);">Пусто</p>':''}
-      ${items.map((i,idx)=>`
-        <div class="admin-item">
-          <span class="admin-item-title">${escapeHtml(i.title||i.name||i.id)}</span>
-          <button onclick="editAdminItem('${section}',${idx})">✎</button>
-          <button onclick="deleteAdminItem('${section}',${idx})" style="color:#c0392b;border-color:#c0392b;">✕</button>
-        </div>`).join('')}
-    </div>
-    <div class="admin-actions">
-      <button class="btn btn-gold" onclick="addAdminItem('${section}')">+ Добавить</button>
-      <button class="btn btn-outline" onclick="saveSiteData()">💾 Сохранить всё</button>
-      <button class="btn btn-outline" onclick="adminLogout()">Выйти</button>
-    </div>`;
+  c.innerHTML='<div style="max-height:45vh;overflow-y:auto;">'
+    + (items.length===0?'<p style="padding:20px;text-align:center;color:var(--text-muted);">Пусто</p>':'')
+    + items.map((i,idx)=>'<div class="admin-item"><span class="admin-item-title">'+escapeHtml(i.title||i.name||i.id)+'</span>'
+      + '<button onclick="editAdminItem(\''+section+'\','+idx+')">✎</button>'
+      + '<button onclick="deleteAdminItem(\''+section+'\','+idx+')" style="color:#c0392b;border-color:#c0392b;">✕</button></div>').join('')
+    + '</div>'
+    + '<div class="admin-actions"><button class="btn btn-gold" onclick="addAdminItem(\''+section+'\')">+ Добавить</button>'
+    + '<button class="btn btn-outline" onclick="saveSiteData()">💾 Сохранить всё</button>'
+    + '<button class="btn btn-outline" onclick="adminLogout()">Выйти</button></div>';
 }
 function saveContacts(){
   siteData.contacts={
@@ -744,8 +788,8 @@ function saveContacts(){
 function addAdminItem(section){
   const id=section.slice(0,3)+'_'+Date.now();
   if (section==='reviews') siteData.reviews.push({id,name:'Гость',role:'',text:'Текст отзыва',rating:5});
-  else if (section==='certificates') siteData.certificates.push({id,title:'Новый сертификат',price:0,image:IMG.cert});
-  else siteData[section].push({id,title:'Новая позиция',short:'',full:'',includes:'',price:0,duration:'',image:IMG.spa});
+  else if (section==='certificates') siteData.certificates.push({id,title:'Новый сертификат',price:0,image:'',_k:'cert'});
+  else siteData[section].push({id,title:'Новая позиция',short:'',full:'',includes:'',price:0,duration:'',image:'',_k:'spa'});
   renderAdminSection(section);
 }
 function deleteAdminItem(section,idx){
@@ -783,25 +827,18 @@ async function saveSiteData(){
 }
 function adminLogout(){
   localStorage.removeItem(ADMIN_STORAGE_KEY);
-  document.getElementById('adminLoginBlock').style.display='';
-  document.getElementById('adminPanelBlock').style.display='none';
   closeModal('adminModal');
+  closeModal('accountModal');
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  СКРЫТЫЙ ВХОД В АДМИНКУ
-// ═══════════════════════════════════════════════════════════════
 let logoClicks=0, logoTimer=null;
 document.getElementById('logo').addEventListener('click',(e)=>{
   e.preventDefault();
   logoClicks++; clearTimeout(logoTimer);
   logoTimer=setTimeout(()=>logoClicks=0,1500);
-  if (logoClicks>=5){ logoClicks=0; openAdmin(); }
+  if (logoClicks>=5){ logoClicks=0; openAccount(); }
 });
 
-// ═══════════════════════════════════════════════════════════════
-//  СТАРТ
-// ═══════════════════════════════════════════════════════════════
 document.getElementById('year').textContent=new Date().getFullYear();
 loadSiteData();
 </script>
