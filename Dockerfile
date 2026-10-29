@@ -3,6 +3,8 @@
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 RUN install-php-extensions curl
 
+RUN a2dismod mpm_event mpm_worker && a2enmod mpm_prefork
+
 COPY . /var/www/html/
 RUN chown -R www-data:www-data /var/www/html
 
