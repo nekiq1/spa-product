@@ -1,43 +1,27 @@
 <?php
-/**
- * api.php — прокси к PocketBase. Настройки — через переменные окружения Railway.
- */
+// api.php — автологин в PocketBase + debug-эндпоинт
+function env($k, $d = null) { $v = getenv($k); return ($v === false || $v === '') ? $d : $v; }
+function envBool($k, $d = false) { $v = getenv($k); if ($v === false) return $d; return in_array(strtolower(trim($v)), ['1','true','yes','on'], true); }
+function envArr($k) { $v = getenv($k); if ($v === false || trim($v) === '') return []; return array_values(array_filter(array_map('trim', explode(',', $v)))); }
 
-function env(string $k, $default = null) {
-    $v = getenv($k);
-    return ($v === false || $v === '') ? $default : $v;
-}
-function envBool(string $k, bool $d = false): bool {
-    $v = getenv($k);
-    if ($v === false) return $d;
-    return in_array(strtolower(trim($v)), ['1','true','yes','on'], true);
-}
-function envArray(string $k): array {
-    $v = getenv($k);
-    if ($v === false || trim($v) === '') return [];
-    return array_values(array_filter(array_map('trim', explode(',', $v)), fn($x) => $x !== ''));
-}
-
-define('PB_URL',               rtrim(env('PB_URL', 'http://127.0.0.1:8090'), '/'));
-define('PB_ADMIN_TOKEN',       env('PB_ADMIN_TOKEN', ''));
-define('PB_COLLECTION_SITE',   env('PB_COLLECTION_SITE', 'site_data'));
+define('PB_URL', rtrim(env('PB_URL', ''), '/'));
+define('PB_ADMIN_EMAIL', env('PB_ADMIN_EMAIL', ''));
+define('PB_ADMIN_PASSWORD', env('PB_ADMIN_PASSWORD', ''));
+define('PB_ADMIN_TOKEN', env('PB_ADMIN_TOKEN', ''));
+define('PB_COLLECTION_SITE', env('PB_COLLECTION_SITE', 'site_data'));
 define('PB_COLLECTION_ORDERS', env('PB_COLLECTION_ORDERS', 'orders'));
-define('PB_COLLECTION_SUBS',   env('PB_COLLECTION_SUBS', 'subscribers'));
-
-define('ADMIN_SECRET',         env('ADMIN_SECRET', ''));
-define('ADMIN_LOGIN',          env('ADMIN_LOGIN', 'admin'));
-define('ADMIN_PASSWORD',       env('ADMIN_PASSWORD', 'neospa2025'));
-
-define('VK_ACCESS_TOKEN',      env('VK_ACCESS_TOKEN', ''));
-define('VK_API_VERSION',       env('VK_API_VERSION', '5.131'));
-$vk_peer_ids = array_values(array_filter(array_map('intval', envArray('VK_PEER_IDS'))));
-
-define('TG_BOT_TOKEN',         env('TG_BOT_TOKEN', ''));
-define('TG_API_BASE',          env('TG_API_BASE', ''));
-$tg_chat_ids = envArray('TG_CHAT_IDS');
-
-define('NOTIFY_VK',            envBool('NOTIFY_VK', true));
-define('NOTIFY_TELEGRAM',      envBool('NOTIFY_TELEGRAM', true));
+define('PB_COLLECTION_SUBS', env('PB_COLLECTION_SUBS', 'subscribers'));
+define('ADMIN_SECRET', env('ADMIN_SECRET', ''));
+define('ADMIN_LOGIN', env('ADMIN_LOGIN', 'admin'));
+define('ADMIN_PASSWORD', env('ADMIN_PASSWORD', ''));
+define('VK_ACCESS_TOKEN', env('VK_ACCESS_TOKEN', ''));
+define('VK_API_VERSION', env('VK_API_VERSION', '5.131'));
+$vk_peer_ids = array_map('intval', envArr('VK_PEER_IDS'));
+define('TG_BOT_TOKEN', env('TG_BOT_TOKEN', ''));
+$tg_chat_ids = envArr('TG_CHAT_IDS');
+define('NOTIFY_VK', envBool('NOTIFY_VK', false));
+define('NOTIFY_TELEGRAM', envBool('NOTIFY_TELEGRAM', false));
+define('TOKEN_CACHE', sys_get_temp_dir().'/pb_token_cache.json');
 
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: ' . env('ALLOWED_ORIGIN', '*'));
@@ -45,212 +29,191 @@ header('Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, X-Admin-Token');
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
 
-function pbRequest(string $method, string $path, ?array $body = null): array {
-    if (PB_ADMIN_TOKEN === '') throw new RuntimeException('PB_ADMIN_TOKEN не задан');
-    $url = PB_URL . $path;
-    $ch = curl_init($url);
+if (isset($_GET['debug'])) {
+    $out = [
+        'pb_url' => PB_URL,
+        'pb_collections' => ['site'=>PB_COLLECTION_SITE,'orders'=>PB_COLLECTION_ORDERS,'subs'=>PB_COLLECTION_SUBS],
+        'admin_secret_set' => ADMIN_SECRET !== '',
+        'admin_login' => ADMIN_LOGIN,
+        'admin_password_set' => ADMIN_PASSWORD !== '',
+        'pb_email_set' => PB_ADMIN_EMAIL !== '',
+        'pb_password_set' => PB_ADMIN_PASSWORD !== '',
+        'pb_token_set' => PB_ADMIN_TOKEN !== '',
+        'health' => null,
+        'auth' => null,
+        'site_get' => null,
+    ];
+    if (PB_URL) {
+        $ch = curl_init(PB_URL.'/api/health');
+        curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER=>true, CURLOPT_TIMEOUT=>5]);
+        $r = curl_exec($ch); $code = curl_getinfo($ch, CURLINFO_HTTP_CODE); curl_close($ch);
+        $out['health'] = ['code'=>$code, 'body'=>$r];
+    }
+    try {
+        $token = getAdminToken();
+        $out['auth'] = ['ok'=>true, 'token_len'=>strlen($token)];
+    } catch (Throwable $e) {
+        $out['auth'] = ['ok'=>false, 'error'=>$e->getMessage()];
+    }
+    try {
+        $r = pbRequest('GET', '/api/collections/'.PB_COLLECTION_SITE.'/records?perPage=1');
+        $out['site_get'] = ['ok'=>true, 'items'=>count($r['items'] ?? [])];
+    } catch (Throwable $e) {
+        $out['site_get'] = ['ok'=>false, 'error'=>$e->getMessage()];
+    }
+    echo json_encode($out, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+    exit;
+}
+
+function getAdminToken(bool $refresh = false): string {
+    if (!$refresh && file_exists(TOKEN_CACHE)) {
+        $c = json_decode(@file_get_contents(TOKEN_CACHE), true);
+        if ($c && !empty($c['token']) && ($c['exp'] ?? 0) > time() + 60) return $c['token'];
+    }
+    if (PB_ADMIN_EMAIL && PB_ADMIN_PASSWORD) {
+        $ch = curl_init(PB_URL.'/api/collections/_superusers/auth-with-password');
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER=>true, CURLOPT_POST=>true,
+            CURLOPT_POSTFIELDS=>json_encode(['identity'=>PB_ADMIN_EMAIL,'password'=>PB_ADMIN_PASSWORD]),
+            CURLOPT_HTTPHEADER=>['Content-Type: application/json'], CURLOPT_TIMEOUT=>10,
+        ]);
+        $resp = curl_exec($ch); $code = curl_getinfo($ch, CURLINFO_HTTP_CODE); $err = curl_error($ch); curl_close($ch);
+        if ($resp === false) throw new RuntimeException("PB auth cURL: $err");
+        $d = json_decode($resp, true);
+        if ($code >= 400 || empty($d['token'])) throw new RuntimeException("PB auth $code: ".($d['message'] ?? substr($resp,0,200)));
+        $exp = time() + 3600;
+        $parts = explode('.', $d['token']);
+        if (count($parts) === 3) { $p = json_decode(base64_decode(strtr($parts[1],'-_','+/')), true); if (!empty($p['exp'])) $exp = (int)$p['exp']; }
+        @file_put_contents(TOKEN_CACHE, json_encode(['token'=>$d['token'],'exp'=>$exp]));
+        return $d['token'];
+    }
+    if (PB_ADMIN_TOKEN === '') throw new RuntimeException('Ни PB_ADMIN_EMAIL/PASSWORD, ни PB_ADMIN_TOKEN не заданы');
+    return PB_ADMIN_TOKEN;
+}
+
+function pbRequest(string $method, string $path, ?array $body = null, bool $retry = true): array {
+    if (PB_URL === '') throw new RuntimeException('PB_URL не задан');
+    $token = getAdminToken();
+    $ch = curl_init(PB_URL.$path);
     curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_CUSTOMREQUEST  => $method,
-        CURLOPT_HTTPHEADER     => [
-            'Authorization: Bearer ' . PB_ADMIN_TOKEN,
-            'Content-Type: application/json',
-        ],
-        CURLOPT_TIMEOUT => 15,
+        CURLOPT_RETURNTRANSFER=>true, CURLOPT_CUSTOMREQUEST=>$method,
+        CURLOPT_HTTPHEADER=>['Authorization: Bearer '.$token, 'Content-Type: application/json'],
+        CURLOPT_TIMEOUT=>15,
     ]);
     if ($body !== null) curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body, JSON_UNESCAPED_UNICODE));
-    $response = curl_exec($ch);
-    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $err  = curl_error($ch);
-    curl_close($ch);
-    if ($response === false) throw new RuntimeException('PB cURL: ' . $err);
-    $decoded = json_decode($response, true);
-    if (!is_array($decoded)) throw new RuntimeException('PB invalid JSON: ' . substr($response,0,200));
-    if ($code >= 400) throw new RuntimeException('PB ' . ($decoded['message'] ?? $code));
-    return $decoded;
+    $resp = curl_exec($ch); $code = curl_getinfo($ch, CURLINFO_HTTP_CODE); $err = curl_error($ch); curl_close($ch);
+    if ($resp === false) throw new RuntimeException("PB cURL: $err");
+    $d = json_decode($resp, true);
+    if (!is_array($d)) throw new RuntimeException("PB invalid JSON ($code): ".substr($resp, 0, 300));
+    if ($code === 401 && $retry) { @unlink(TOKEN_CACHE); return pbRequest($method, $path, $body, false); }
+    if ($code >= 400) throw new RuntimeException("PB $code: ".($d['message'] ?? substr($resp,0,200)));
+    return $d;
 }
 
-function vkSendMessage(int $peerId, string $message): bool {
-    if (VK_ACCESS_TOKEN === '' || $peerId === 0) { error_log('VK: пусто'); return false; }
-    $params = [
-        'access_token' => VK_ACCESS_TOKEN, 'v' => VK_API_VERSION,
-        'peer_id' => $peerId, 'message' => $message,
-        'random_id' => random_int(1, PHP_INT_MAX),
-    ];
-    $ch = curl_init('https://api.vk.com/method/messages.send');
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true, CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS => http_build_query($params),
-        CURLOPT_TIMEOUT => 10, CURLOPT_CONNECTTIMEOUT => 5,
-    ]);
-    $response = curl_exec($ch); $err = curl_error($ch); curl_close($ch);
-    if ($response === false) { error_log('VK cURL: ' . $err); return false; }
-    $d = json_decode($response, true);
-    if (isset($d['error'])) { error_log('VK: ' . json_encode($d['error'], JSON_UNESCAPED_UNICODE)); return false; }
-    return true;
-}
-
-function tgSendMessage($chatId, string $message): bool {
-    if (TG_BOT_TOKEN === '' || $chatId === '' || $chatId === null) { error_log('TG: пусто'); return false; }
-    $base = TG_API_BASE !== '' ? rtrim(TG_API_BASE, '/') : 'https://api.telegram.org/bot';
-    $url  = $base . TG_BOT_TOKEN . '/sendMessage';
-    $params = [
-        'chat_id' => $chatId, 'text' => $message,
-        'parse_mode' => 'HTML', 'disable_web_page_preview' => 'true',
-    ];
-    $ch = curl_init($url);
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true, CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS => http_build_query($params),
-        CURLOPT_TIMEOUT => 10, CURLOPT_CONNECTTIMEOUT => 5,
-    ]);
-    $response = curl_exec($ch); $err = curl_error($ch); curl_close($ch);
-    if ($response === false) { error_log('TG cURL: ' . $err); return false; }
-    $d = json_decode($response, true);
-    if (empty($d['ok'])) { error_log('TG: ' . $response); return false; }
-    return true;
-}
-
-function readJsonBody(): array {
+function readJson(): array {
     $raw = file_get_contents('php://input');
     if ($raw === '' || $raw === false) throw new RuntimeException('Пустое тело');
-    $data = json_decode($raw, true);
-    if (!is_array($data)) throw new RuntimeException('Невалидный JSON');
-    return $data;
+    $d = json_decode($raw, true);
+    if (!is_array($d)) throw new RuntimeException('Невалидный JSON');
+    return $d;
 }
-
-function requireAdmin(): void {
-    if (ADMIN_SECRET === '') {
-        http_response_code(503);
-        echo json_encode(['error' => 'ADMIN_SECRET не задан'], JSON_UNESCAPED_UNICODE);
-        exit;
-    }
-    $token = $_SERVER['HTTP_X_ADMIN_TOKEN'] ?? '';
-    if (!hash_equals(ADMIN_SECRET, $token)) {
-        http_response_code(403);
-        echo json_encode(['error' => 'Доступ запрещён'], JSON_UNESCAPED_UNICODE);
-        exit;
-    }
+function vkSend(int $pid, string $msg): bool {
+    if (VK_ACCESS_TOKEN === '' || $pid === 0) return false;
+    $ch = curl_init('https://api.vk.com/method/messages.send');
+    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER=>true, CURLOPT_POST=>true,
+        CURLOPT_POSTFIELDS=>http_build_query(['access_token'=>VK_ACCESS_TOKEN,'v'=>VK_API_VERSION,'peer_id'=>$pid,'message'=>$msg,'random_id'=>random_int(1,PHP_INT_MAX)]),
+        CURLOPT_TIMEOUT=>10]);
+    $r = curl_exec($ch); curl_close($ch); return $r !== false;
+}
+function tgSend($cid, string $msg): bool {
+    if (TG_BOT_TOKEN === '') return false;
+    $base = env('TG_API_BASE', '') ?: 'https://api.telegram.org/bot';
+    $ch = curl_init($base.TG_BOT_TOKEN.'/sendMessage');
+    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER=>true, CURLOPT_POST=>true,
+        CURLOPT_POSTFIELDS=>http_build_query(['chat_id'=>$cid,'text'=>$msg,'parse_mode'=>'HTML','disable_web_page_preview'=>'true']),
+        CURLOPT_TIMEOUT=>10]);
+    $r = curl_exec($ch); curl_close($ch); return $r !== false;
 }
 
 try {
     $method = $_SERVER['REQUEST_METHOD'];
-
     switch ($method) {
-
         case 'GET':
             $content = [];
             try {
-                $r = pbRequest('GET', '/api/collections/' . PB_COLLECTION_SITE . '/records?perPage=1');
+                $r = pbRequest('GET', '/api/collections/'.PB_COLLECTION_SITE.'/records?perPage=1');
                 if (!empty($r['items'])) {
-                    $raw = $r['items'][0]['content'] ?? '{}';
-                    $content = json_decode($raw, true) ?: [];
+                    $content = json_decode($r['items'][0]['content'] ?? '{}', true) ?: [];
                 }
-            } catch (Throwable $e) {
-                error_log('PB GET: ' . $e->getMessage());
-            }
-            echo json_encode(['content' => $content ?: new stdClass()], JSON_UNESCAPED_UNICODE);
+            } catch (Throwable $e) { error_log('PB GET: '.$e->getMessage()); }
+            echo json_encode(['content'=>$content ?: new stdClass()], JSON_UNESCAPED_UNICODE);
             break;
 
         case 'PUT':
-            requireAdmin();
-            $body = readJsonBody();
-            if (!isset($body['content'])) throw new RuntimeException('Нет поля content');
-            $list = pbRequest('GET', '/api/collections/' . PB_COLLECTION_SITE . '/records?perPage=1');
-            $json = json_encode($body['content'], JSON_UNESCAPED_UNICODE);
-            if (empty($list['items'])) {
-                pbRequest('POST', '/api/collections/' . PB_COLLECTION_SITE . '/records', ['content' => $json]);
-            } else {
-                pbRequest('PATCH', '/api/collections/' . PB_COLLECTION_SITE . '/records/' . $list['items'][0]['id'], ['content' => $json]);
+            $token = $_SERVER['HTTP_X_ADMIN_TOKEN'] ?? '';
+            if (ADMIN_SECRET === '' || !hash_equals(ADMIN_SECRET, $token)) {
+                http_response_code(403);
+                echo json_encode(['error'=>'Доступ запрещён'], JSON_UNESCAPED_UNICODE);
+                break;
             }
-            echo json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
+            $body = readJson();
+            if (!isset($body['content'])) throw new RuntimeException('Нет поля content');
+            $list = pbRequest('GET', '/api/collections/'.PB_COLLECTION_SITE.'/records?perPage=1');
+            $json = json_encode($body['content'], JSON_UNESCAPED_UNICODE);
+            if (empty($list['items'])) pbRequest('POST', '/api/collections/'.PB_COLLECTION_SITE.'/records', ['content'=>$json]);
+            else pbRequest('PATCH', '/api/collections/'.PB_COLLECTION_SITE.'/records/'.$list['items'][0]['id'], ['content'=>$json]);
+            echo json_encode(['success'=>true], JSON_UNESCAPED_UNICODE);
             break;
 
         case 'POST':
-            $body = readJsonBody();
+            $body = readJson();
             $action = $body['action'] ?? 'order';
 
             if ($action === 'login') {
-                $login = $body['login'] ?? '';
-                $password = $body['password'] ?? '';
-                if ($login === ADMIN_LOGIN && $password === ADMIN_PASSWORD) {
-                    echo json_encode(['success' => true, 'token' => ADMIN_SECRET], JSON_UNESCAPED_UNICODE);
+                if (($body['login'] ?? '') === ADMIN_LOGIN && ($body['password'] ?? '') === ADMIN_PASSWORD && ADMIN_SECRET !== '') {
+                    echo json_encode(['success'=>true,'token'=>ADMIN_SECRET], JSON_UNESCAPED_UNICODE);
                 } else {
                     http_response_code(401);
-                    echo json_encode(['error' => true, 'message' => 'Неверный логин или пароль'], JSON_UNESCAPED_UNICODE);
+                    echo json_encode(['error'=>true,'message'=>'Неверный логин или пароль'], JSON_UNESCAPED_UNICODE);
                 }
                 break;
             }
 
             if ($action === 'subscribe') {
                 $email = trim($body['email'] ?? '');
-                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    throw new RuntimeException('Неверный email');
-                }
-                try {
-                    pbRequest('POST', '/api/collections/' . PB_COLLECTION_SUBS . '/records', ['email' => $email]);
-                } catch (Throwable $e) {
-                    error_log('subscribe: ' . $e->getMessage());
-                    throw new RuntimeException('Не удалось сохранить подписку. Проверьте коллекцию subscribers в PocketBase.');
-                }
-                echo json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) throw new RuntimeException('Неверный email');
+                pbRequest('POST', '/api/collections/'.PB_COLLECTION_SUBS.'/records', ['email'=>$email]);
+                echo json_encode(['success'=>true], JSON_UNESCAPED_UNICODE);
                 break;
             }
 
             foreach (['type','title','name','phone','social_type','social_contact'] as $f) {
-                if (empty($body[$f])) throw new RuntimeException('Поле "' . $f . '" обязательно');
+                if (empty($body[$f])) throw new RuntimeException('Поле "'.$f.'" обязательно');
             }
-            $orderId = 'ORD-' . strtoupper(bin2hex(random_bytes(4))) . '-' . time();
-            pbRequest('POST', '/api/collections/' . PB_COLLECTION_ORDERS . '/records', [
-                'order_id'       => $orderId,
-                'type'           => $body['type'],
-                'title'          => $body['title'],
-                'name'           => $body['name'],
-                'phone'          => $body['phone'],
-                'social_type'    => $body['social_type'],
-                'social_contact' => $body['social_contact'],
-                'datetime'       => $body['datetime'] ?? '',
-                'comment'        => $body['comment'] ?? '',
+            $orderId = 'ORD-'.strtoupper(bin2hex(random_bytes(4))).'-'.time();
+            pbRequest('POST', '/api/collections/'.PB_COLLECTION_ORDERS.'/records', [
+                'order_id'=>$orderId,'type'=>$body['type'],'title'=>$body['title'],'name'=>$body['name'],
+                'phone'=>$body['phone'],'social_type'=>$body['social_type'],'social_contact'=>$body['social_contact'],
+                'datetime'=>$body['datetime'] ?? '','comment'=>$body['comment'] ?? '',
             ]);
-
-            $vkText = "🆕 Новая заявка!\n\n"
-                    . "🆔 {$orderId}\n📌 Тип: {$body['type']}\n📝 {$body['title']}\n"
-                    . "👤 {$body['name']}\n📞 {$body['phone']}\n"
-                    . "💬 {$body['social_type']}: {$body['social_contact']}\n";
-            if (!empty($body['datetime'])) $vkText .= "📅 {$body['datetime']}\n";
-            if (!empty($body['comment']))  $vkText .= "📄 {$body['comment']}\n";
-
-            $e = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-            $tgText = "🆕 <b>Новая заявка!</b>\n\n"
-                    . "🆔 <code>{$e($orderId)}</code>\n📌 Тип: {$e($body['type'])}\n"
-                    . "📝 {$e($body['title'])}\n👤 {$e($body['name'])}\n"
-                    . "📞 {$e($body['phone'])}\n"
-                    . "💬 {$e($body['social_type'])}: {$e($body['social_contact'])}\n";
-            if (!empty($body['datetime'])) $tgText .= "📅 {$e($body['datetime'])}\n";
-            if (!empty($body['comment']))  $tgText .= "📄 {$e($body['comment'])}\n";
-
             if (NOTIFY_VK) {
-                global $vk_peer_ids;
-                foreach ($vk_peer_ids as $pid) vkSendMessage((int)$pid, $vkText);
+                $t = "🆕 Заявка!\n🆔 {$orderId}\n📌 {$body['type']}\n📝 {$body['title']}\n👤 {$body['name']}\n📞 {$body['phone']}\n💬 {$body['social_type']}: {$body['social_contact']}\n";
+                foreach ($vk_peer_ids as $pid) vkSend($pid, $t);
             }
             if (NOTIFY_TELEGRAM) {
-                global $tg_chat_ids;
-                foreach ($tg_chat_ids as $cid) tgSendMessage($cid, $tgText);
+                $e = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES|ENT_HTML5, 'UTF-8');
+                $t = "🆕 <b>Заявка!</b>\n🆔 <code>{$e($orderId)}</code>\n📌 {$e($body['type'])}\n📝 {$e($body['title'])}\n👤 {$e($body['name'])}\n📞 {$e($body['phone'])}\n💬 {$e($body['social_type'])}: {$e($body['social_contact'])}\n";
+                foreach ($tg_chat_ids as $cid) tgSend($cid, $t);
             }
-
-            echo json_encode(['success' => true, 'order_id' => $orderId], JSON_UNESCAPED_UNICODE);
+            echo json_encode(['success'=>true,'order_id'=>$orderId], JSON_UNESCAPED_UNICODE);
             break;
 
         default:
             http_response_code(405);
-            echo json_encode(['error' => 'Метод не поддерживается'], JSON_UNESCAPED_UNICODE);
+            echo json_encode(['error'=>'Метод не поддерживается'], JSON_UNESCAPED_UNICODE);
     }
-
-} catch (RuntimeException $e) {
-    http_response_code(400);
-    echo json_encode(['error' => true, 'message' => $e->getMessage()], JSON_UNESCAPED_UNICODE);
 } catch (Throwable $e) {
     http_response_code(500);
-    error_log('api.php: ' . $e->getMessage());
-    echo json_encode(['error' => true, 'message' => 'Внутренняя ошибка'], JSON_UNESCAPED_UNICODE);
+    error_log('api.php: '.$e->getMessage());
+    echo json_encode(['error'=>true, 'message'=>$e->getMessage()], JSON_UNESCAPED_UNICODE);
 }
