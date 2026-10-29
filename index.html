@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Neo SPA — Искусство японского расслабления | Санкт-Петербург</title>
+<meta name="description" content="Премиальный японский спа-салон в Санкт-Петербурге. Head SPA, Japanese Face, сертификаты. ул. Есенина, 1 к1.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --zen:#1b2a2f; --zen-light:#243a40; --olive:#5e6d5a;
+  --gold:#b8935a; --gold-light:#c9a76e;
+  --cream:#f4efe6; --cream-dark:#e6ded2; --white:#fbf8f3;
+  --text-muted:#7a7a72;
+  --shadow:0 20px 60px rgba(27,42,47,.12);
+  --radius:24px; --radius-sm:16px;
+  --transition:.5s cubic-bezier(.25,.46,.45,.94);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--zen);line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased;min-height:100vh}
+h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:500;line-height:1.15;letter-spacing:-.01em}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit}
+.bg-canvas{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden;background:linear-gradient(180deg,var(--cream) 0%,var(--cream-dark) 100%)}
+.bg-blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.35;animation:floatBlob 22s ease-in-out infinite}
+.bg-blob-1{width:520px;height:520px;background:var(--olive);top:-10%;left:-10%}
+.bg-blob-2{width:600px;height:600px;background:var(--gold);bottom:-20%;right:-15%;animation-delay:-7s;opacity:.18}
+.bg-blob-3{width:420px;height:420px;background:var(--zen);top:40%;left:50%;animation-delay:-14s;opacity:.12}
+@keyframes floatBlob{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(60px,-40px) scale(1.1)}66%{transform:translate(-40px,50px) scale(.95)}}
+.particles{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.particle{position:absolute;width:3px;height:3px;background:var(--gold);border-radius:50%;opacity:0;animation:riseParticle linear infinite}
+@keyframes riseParticle{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:.7}90%{opacity:.5}100%{transform:translateY(-10vh) scale(1);opacity:0}}
+.site-header{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 24px;transition:transform .45s cubic-bezier(.4,0,.2,1);display:flex;justify-content:center;align-items:center;pointer-events:none}
+.site-header.header-hidden{transform:translateY(-130%)}
+.site-header > *{pointer-events:auto}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;color:var(--zen);letter-spacing:.08em;position:absolute;left:24px;cursor:pointer;user-select:none}
+.logo span{color:var(--gold)}
+.floating-menu{display:flex;align-items:center;gap:4px;background:rgba(251,248,243,.85);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);border:1px solid rgba(184,147,90,.2);border-radius:100px;padding:8px 12px;box-shadow:0 12px 40px rgba(27,42,47,.1)}
+.floating-menu a{padding:8px 16px;border-radius:100px;font-size:.9rem;font-weight:500;color:var(--zen);transition:background .3s,color .3s;white-space:nowrap}
+.floating-menu a:hover{background:var(--zen);color:var(--cream)}
+.social-icons{display:flex;gap:6px;margin-left:8px;padding-left:12px;border-left:1px solid rgba(184,147,90,.3)}
+.social-icons a{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .3s,transform .3s;padding:0}
+.social-icons a:hover{background:var(--zen);transform:translateY(-2px)}
+.social-icons svg{width:16px;height:16px;fill:currentColor}
+.burger{display:none;width:44px;height:44px;border-radius:50%;background:rgba(251,248,243,.9);backdrop-filter:blur(10px);align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(27,42,47,.12);position:absolute;right:20px}
+.burger span{display:block;width:18px;height:1.5px;background:var(--zen);position:relative}
+.burger span::before,.burger span::after{content:'';position:absolute;left:0;width:18px;height:1.5px;background:var(--zen);transition:.3s}
+.burger span::before{top:-6px}.burger span::after{top:6px}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 24px 80px;position:relative}
+.hero-tag{font-size:.8rem;text-transform:uppercase;letter-spacing:.25em;color:var(--gold);margin-bottom:24px;font-weight:600}
+.hero h1{font-size:clamp(2.5rem,6vw,5rem);font-weight:400;color:var(--zen);max-width:900px;margin:0 auto 32px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero-sub{font-size:clamp(1rem,1.5vw,1.15rem);color:var(--text-muted);max-width:560px;margin:0 auto 44px}
+.hero-actions{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 36px;border-radius:100px;font-size:1rem;font-weight:600;transition:var(--transition);white-space:nowrap}
+.btn-gold{background:var(--gold);color:var(--zen)}
+.btn-gold:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 12px 32px rgba(184,147,90,.35)}
+.btn-outline{border:1.5px solid var(--zen);color:var(--zen)}
+.btn-outline:hover{background:var(--zen);color:var(--cream)}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
+section{padding:100px 24px;position:relative}
+.section-inner{max-width:1280px;margin:0 auto}
+.section-header{text-align:center;margin-bottom:60px}
+.section-header .eyebrow{font-size:.8rem;text-transform:uppercase;letter-spacing:.25em;color:var(--gold);font-weight:600;margin-bottom:12px}
+.section-header h2{font-size:clamp(2rem,4vw,3.2rem);margin-bottom:16px}
+.section-header p{color:var(--text-muted);max-width:560px;margin:0 auto}
+.video-section{padding:80px 24px;overflow:hidden}
+.video-carousel{display:flex;gap:20px;overflow-x:auto;padding:20px 4px 32px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.video-carousel::-webkit-scrollbar{display:none}
+.video-card{flex:0 0 min(420px,85vw);aspect-ratio:9/16;border-radius:var(--radius);overflow:hidden;position:relative;scroll-snap-align:center;box-shadow:var(--shadow);background:var(--zen)}
+.video-card video{width:100%;height:100%;object-fit:cover;display:block}
+.video-card .video-fallback{width:100%;height:100%;background-size:cover;background-position:center}
+.video-card .video-label{position:absolute;bottom:16px;left:16px;color:var(--white);font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;background:rgba(27,42,47,.6);padding:6px 14px;border-radius:100px;backdrop-filter:blur(10px)}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px}
+.card{background:var(--white);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:var(--transition);border:1px solid rgba(184,147,90,.15);display:flex;flex-direction:column}
+.card:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:var(--gold)}
+.card-img{aspect-ratio:4/3;overflow:hidden;background:var(--cream-dark)}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.card:hover .card-img img{transform:scale(1.05)}
+.card-body{padding:24px;flex:1;display:flex;flex-direction:column}
+.card-body h3{font-size:1.5rem;margin-bottom:8px}
+.card-body p{font-size:.92rem;color:var(--text-muted);flex:1;margin-bottom:16px}
+.card-footer{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.price{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;color:var(--zen)}
+.duration{font-size:.85rem;color:var(--gold);font-weight:600}
+.reviews-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.review-card{background:var(--white);border-radius:var(--radius);padding:32px;border:1px solid rgba(184,147,90,.15)}
+.review-stars{color:var(--gold);font-size:1.1rem;letter-spacing:2px;margin-bottom:16px}
+.review-text{font-size:1rem;color:var(--zen-light);margin-bottom:20px;font-style:italic}
+.review-author{font-weight:600;font-size:.95rem;color:var(--zen)}
+.review-role{font-size:.85rem;color:var(--text-muted)}
+.faq-list{max-width:800px;margin:0 auto}
+.faq-item{background:var(--white);border-radius:var(--radius-sm);margin-bottom:12px;border:1px solid rgba(184,147,90,.15);overflow:hidden}
+.faq-question{padding:20px 24px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:600;gap:16px}
+.faq-toggle{color:var(--gold);font-size:1.4rem;transition:transform .3s;flex-shrink:0}
+.faq-item.open .faq-toggle{transform:rotate(45deg)}
+.faq-answer{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 24px;color:var(--text-muted)}
+.faq-item.open .faq-answer{max-height:300px;padding:0 24px 20px}
+.contact-bar{background:var(--zen);color:var(--cream);border-radius:var(--radius);padding:60px 40px;text-align:center;margin-top:40px}
+.contact-bar h2{color:var(--cream);margin-bottom:20px}
+.contact-info{display:flex;flex-wrap:wrap;justify-content:center;gap:32px;margin-top:24px;font-size:.95rem}
+.contact-info a{color:var(--gold-light);transition:color .3s}
+.contact-info a:hover{color:var(--white)}
+footer{text-align:center;padding:40px 24px;font-size:.85rem;color:var(--text-muted)}
+.modal-overlay{position:fixed;inset:0;background:rgba(27,42,47,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;padding:20px}
+.modal-overlay.active{opacity:1;pointer-events:auto}
+.modal{background:var(--white);border-radius:var(--radius);max-width:600px;width:100%;max-height:90vh;overflow-y:auto;padding:32px;position:relative;transform:translateY(20px) scale(.97);transition:transform .3s;-webkit-overflow-scrolling:touch}
+.modal-overlay.active .modal{transform:translateY(0) scale(1)}
+.modal-close{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;background:var(--cream);font-size:1.4rem;display:flex;align-items:center;justify-content:center;color:var(--zen);transition:background .3s;z-index:2}
+.modal-close:hover{background:var(--cream-dark)}
+.modal h2{font-size:2rem;margin-bottom:16px;padding-right:40px}
+.modal-img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:20px}
+.form-label{display:block;margin-bottom:16px}
+.form-label span{display:block;font-size:.85rem;font-weight:600;margin-bottom:6px;color:var(--zen-light)}
+.form-label input,.form-label select,.form-label textarea{width:100%;padding:14px 16px;border:1.5px solid var(--cream-dark);border-radius:14px;font-size:1rem;background:var(--white);color:var(--zen);transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;appearance:none}
+.form-label textarea{resize:vertical;min-height:80px}
+.form-label input:focus,.form-label select:focus,.form-label textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(184,147,90,.12)}
+.admin-tabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap;border-bottom:1px solid var(--cream-dark);padding-bottom:12px}
+.admin-tab{padding:8px 16px;border-radius:100px;font-size:.85rem;font-weight:600;border:1px solid var(--cream-dark);background:var(--white);transition:var(--transition)}
+.admin-tab.active{background:var(--zen);color:var(--cream);border-color:var(--zen)}
+.admin-item{display:flex;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--cream-dark)}
+.admin-item-title{flex:1;font-size:.95rem}
+.admin-item button{padding:6px 12px;border-radius:10px;font-size:.8rem;border:1px solid var(--cream-dark);transition:var(--transition)}
+.admin-item button:hover{background:var(--zen);color:var(--cream);border-color:var(--zen)}
+.admin-actions{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap}
+.admin-actions button{padding:10px 20px;border-radius:12px;font-size:.9rem;font-weight:600}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s ease,transform .8s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@media (max-width:900px){
+  .logo{position:static;margin-right:auto}
+  .site-header{justify-content:space-between;padding:14px 20px}
+  .floating-menu{position:fixed;top:80px;right:20px;left:20px;flex-direction:column;align-items:stretch;gap:2px;padding:12px;border-radius:24px;opacity:0;pointer-events:none;transform:translateY(-10px);transition:opacity .3s,transform .3s}
+  .floating-menu.open{opacity:1;pointer-events:auto;transform:translateY(0)}
+  .floating-menu a{padding:12px 16px;border-radius:14px;text-align:center}
+  .social-icons{justify-content:center;border-left:none;border-top:1px solid rgba(184,147,90,.3);padding-top:12px;padding-left:0;margin-left:0;margin-top:4px}
+  .burger{display:flex}
+  section{padding:70px 20px}
+  .contact-bar{padding:40px 24px;border-radius:20px}
+  .modal{padding:24px;border-radius:20px}
+  .video-card{flex:0 0 85vw}
+}
+@media (max-width:500px){
+  .hero h1{font-size:2.2rem}
+  .hero{padding:100px 20px 60px}
+  .btn{padding:14px 28px;font-size:.95rem}
+  .hero-actions{flex-direction:column;width:100%}
+  .hero-actions .btn{width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-canvas">
+  <div class="bg-blob bg-blob-1"></div>
+  <div class="bg-blob bg-blob-2"></div>
+  <div class="bg-blob bg-blob-3"></div>
+</div>
+<div class="particles" id="particles"></div>
+
+<header class="site-header" id="siteHeader">
+  <a href="#" class="logo" id="logo">Neo<span>·</span>SPA</a>
+  <nav class="floating-menu" id="floatingMenu">
+    <a href="#about">О нас</a>
+    <a href="#services">Программы</a>
+    <a href="#certificates">Сертификаты</a>
+    <a href="#reviews">Отзывы</a>
+    <a href="#faq">Вопросы</a>
+    <div class="social-icons">
+      <a href="#" aria-label="ВКонтакте" data-social="vk" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M12.785 16.241s.288-.032.435-.196c.134-.148.129-.427.129-.427s-.02-1.302.573-1.494c.583-.19 1.332 1.26 2.126 1.817.601.42 1.057.328 1.057.328l2.126-.03s1.112-.07.585-.943c-.043-.071-.306-.66-1.578-1.868-1.331-1.264-1.153-1.06.45-3.246.976-1.328 1.366-2.14 1.244-2.486-.116-.33-.834-.243-.834-.243l-2.394.014s-.177-.024-.31.055c-.13.077-.212.257-.212.257s-.379 1.024-.883 1.895c-1.064 1.833-1.49 1.93-1.664 1.816-.404-.265-.303-1.068-.303-1.638 0-1.78.266-2.523-.518-2.715-.26-.063-.452-.105-1.117-.112-.854-.008-1.576.003-1.985.208-.272.135-.482.438-.354.455.158.021.516.098.706.361.245.34.236 1.104.236 1.104s.141 2.108-.329 2.37c-.322.18-.765-.188-1.716-1.875-.486-.86-.853-1.81-.853-1.81s-.07-.175-.196-.27c-.152-.113-.364-.149-.364-.149l-2.274.014s-.341.01-.466.16c-.111.133-.009.408-.009.408s1.78 4.234 3.795 6.368c1.847 1.955 3.944 1.826 3.944 1.826z"/></svg>
+      </a>
+      <a href="#" aria-label="Telegram" data-social="telegram" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      </a>
+      <a href="#" aria-label="WhatsApp" data-social="whatsapp" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      </a>
+    </div>
+  </nav>
+  <button class="burger" id="burger" aria-label="Меню"><span></span></button>
+</header>
+
+<section class="hero" id="hero">
+  <div class="hero-tag reveal">Neo SPA · Санкт-Петербург</div>
+  <h1 class="reveal">Искусство <em>японского</em><br>расслабления</h1>
+  <p class="hero-sub reveal">Погрузитесь в атмосферу дзен. Авторские ритуалы для тела и души, вдохновлённые традициями страны восходящего солнца.</p>
+  <div class="hero-actions reveal">
+    <button class="btn btn-gold" onclick="openBooking('service')">Забронировать визит</button>
+    <button class="btn btn-outline" onclick="openBooking('certificate')">Приобрести сертификат</button>
+  </div>
+</section>
+
+<section class="video-section" id="about">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="eyebrow">Атмосфера</div>
+      <h2>Погрузитесь в Neo SPA</h2>
+      <p>Каждая деталь создана для вашего спокойствия</p>
+    </div>
+    <div class="video-carousel" id="videoCarousel"></div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="eyebrow">Услуги</div>
+      <h2>Наши программы</h2>
+      <p>Авторские ритуалы, созданные мастерами Neo SPA</p>
+    </div>
+    <div class="cards-grid" id="servicesGrid"></div>
+  </div>
+</section>
+
+<section id="subscriptions">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="eyebrow">Абонементы</div>
+      <h2>Забота по подписке</h2>
+      <p>Регулярный уход по специальной цене</p>
+    </div>
+    <div class="cards-grid" id="subscriptionsGrid"></div>
+  </div>
+</section>
+
+<section id="certificates">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="eyebrow">Подарки</div>
+      <h2>Сертификаты</h2>
+      <p>Подарите мгновение гармонии близким</p>
+    </div>
+    <div class="cards-grid" id="certificatesGrid"></div>
+  </div>
+</section>
+
+<section id="reviews">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="eyebrow">Отзывы</div>
+      <h2>Что говорят гости</h2>
+    </div>
+    <div class="reviews-grid" id="reviewsGrid"></div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="eyebrow">Вопросы</div>
+      <h2>Частые вопросы</h2>
+    </div>
+    <div class="faq-list" id="faqList">
+      <div class="faq-item">
+        <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+          <span>Как записаться на процедуру?</span><span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer"><p>Нажмите «Забронировать визит» на главной или выберите программу в разделе «Услуги». Заполните форму — и мы свяжемся с вами удобным способом.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+          <span>Как долго действует сертификат?</span><span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer"><p>Сертификат действителен 12 месяцев с момента приобретения. Использовать можно на любые услуги салона.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+          <span>Есть ли противопоказания?</span><span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer"><p>Да, при некоторых заболеваниях кожи головы отдельные процедуры могут быть не рекомендованы. Мастер проведёт консультацию перед сеансом.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+          <span>Можно ли перенести запись?</span><span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer"><p>Да, предупредите нас минимум за 4 часа по телефону или в мессенджере.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-inner">
+    <div class="contact-bar reveal">
+      <h2>Ждём вас в Neo SPA</h2>
+      <p>Запишитесь на сеанс или задайте вопрос — мы рядом</p>
+      <div class="contact-info" id="contactInfo">
+        <a href="tel:+79219921888" data-contact="phone">+7 (921) 992-18-88</a>
+        <span data-contact="address">Санкт-Петербург, ул. Есенина, 1 к1</span>
+        <a href="mailto:info@parpalace.ru" data-contact="email">info@parpalace.ru</a>
+      </div>
+      <div style="margin-top:32px;">
+        <button class="btn btn-gold" onclick="openBooking('service')">Записаться</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>© <span id="year"></span> Neo SPA · Санкт-Петербург · Все права защищены</footer>
+
+<div class="modal-overlay" id="cardModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('cardModal')">×</button>
+    <div id="cardModalContent"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('bookingModal')">×</button>
+    <h2 id="bookingTitle">Запись</h2>
+    <form id="bookingForm" novalidate>
+      <input type="hidden" name="type" id="orderType">
+      <input type="hidden" name="title" id="orderTitle">
+      <label class="form-label"><span>Имя *</span>
+        <input type="text" name="name" required placeholder="Как к вам обращаться" autocapitalize="words">
+      </label>
+      <label class="form-label"><span>Телефон *</span>
+        <input type="tel" name="phone" required placeholder="+7 (___) ___-__-__" autocomplete="tel">
+      </label>
+      <label class="form-label"><span>Соцсеть *</span>
+        <select name="social_type" required>
+          <option value="vk">ВКонтакте</option>
+          <option value="telegram">Telegram</option>
+          <option value="whatsapp">WhatsApp</option>
+        </select>
+      </label>
+      <label class="form-label"><span>Ник / ссылка в соцсети *</span>
+        <input type="text" name="social_contact" required placeholder="@username или ссылка"
+               autocapitalize="none" autocorrect="off" spellcheck="false">
+      </label>
+      <label class="form-label" id="datetimeField"><span>Дата и время</span>
+        <input type="datetime-local" name="datetime">
+      </label>
+      <label class="form-label"><span>Комментарий</span>
+        <textarea name="comment" rows="3" placeholder="Пожелания, особенности здоровья..."></textarea>
+      </label>
+      <button type="submit" class="btn btn-gold" style="width:100%;margin-top:12px;">Отправить</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="adminModal">
+  <div class="modal" style="max-width:820px;">
+    <button class="modal-close" onclick="closeModal('adminModal')">×</button>
+    <h2>Админ-панель</h2>
+    <div id="adminLoginBlock">
+      <label class="form-label"><span>Логин</span>
+        <input type="text" id="adminLogin" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="username">
+      </label>
+      <label class="form-label"><span>Пароль</span>
+        <input type="password" id="adminPassword" autocomplete="current-password">
+      </label>
+      <button class="btn btn-gold" style="width:100%;margin-top:12px;" onclick="adminLogin()">Войти</button>
+      <p style="font-size:.8rem;color:var(--text-muted);margin-top:12px;text-align:center;">
+        По умолчанию: <b>admin</b> / <b>neospa2025</b>
+      </p>
+    </div>
+    <div id="adminPanelBlock" style="display:none;">
+      <div class="admin-tabs" id="adminTabs"></div>
+      <div id="adminContent"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  КОНФИГ
+// ═══════════════════════════════════════════════════════════════
+const API_URL = '/api.php';
+const ADMIN_LOGIN = 'admin';
+const ADMIN_PASSWORD = 'neospa2025';
+const ADMIN_SECRET = 'ЗАМЕНИТЕ_НА_ТОТ_ЖЕ_ТОКЕН_ЧТО_В_ENV';
+const ADMIN_STORAGE_KEY = 'neospa_admin_token';
+
+// ═══════════════════════════════════════════════════════════════
+//  ВСТРОЕННЫЕ SVG-ЗАГЛУШКИ ДЛЯ ФОТО
+//  Работают без интернета — картинка "рисуется" прямо в браузере.
+//  Когда появятся свои фото — см. блок "ВАШИ ФОТО" ниже.
+// ═══════════════════════════════════════════════════════════════
+function svgImg(title, subtitle = 'NEO SPA') {
+  const esc = (s) => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+    <defs>
+      <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#1b2a2f"/>
+        <stop offset="1" stop-color="#243a40"/>
+      </linearGradient>
+    </defs>
+    <rect width="800" height="600" fill="url(#g)"/>
+    <circle cx="400" cy="250" r="90" fill="none" stroke="#b8935a" stroke-width="1.5" opacity="0.5"/>
+    <circle cx="400" cy="250" r="60" fill="none" stroke="#b8935a" stroke-width="1" opacity="0.35"/>
+    <circle cx="400" cy="250" r="3" fill="#b8935a"/>
+    <line x1="400" y1="160" x2="400" y2="340" stroke="#b8935a" stroke-width="0.8" opacity="0.3"/>
+    <line x1="310" y1="250" x2="490" y2="250" stroke="#b8935a" stroke-width="0.8" opacity="0.3"/>
+    <text x="400" y="410" font-family="Georgia, 'Times New Roman', serif" font-size="42" fill="#c9a76e" text-anchor="middle" font-style="italic">${esc(title)}</text>
+    <text x="400" y="455" font-family="Arial, sans-serif" font-size="13" fill="#b8935a" text-anchor="middle" letter-spacing="4" opacity="0.7">${esc(subtitle)}</text>
+  </svg>`;
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(s);
+}
+
+// ─── ВАШИ ФОТО (когда появятся — замени блок IMG ниже на этот) ───
+// const IMG = {
+//   spa:     'assets/spa.jpg',
+//   massage: 'assets/massage.jpg',
+//   face:    'assets/face.jpg',
+//   hair:    'assets/hair.jpg',
+//   zen:     'assets/zen.jpg',
+//   gift:    'assets/gift.jpg',
+//   cert:    'assets/certificate.jpg'
+// };
+
+const IMG = {
+  spa:     svgImg('Head SPA',          'МАССАЖ ГОЛОВЫ'),
+  massage: svgImg('Массаж',            'РИТУАЛ ДЛЯ ТЕЛА'),
+  face:    svgImg('Japanese Face',     'УХОД ЗА ЛИЦОМ'),
+  hair:    svgImg('Уход за волосами',  'ВОССТАНОВЛЕНИЕ'),
+  zen:     svgImg('Три-комплекс',      'КОМПЛЕКС'),
+  gift:    svgImg('Подарок',           'СЕРТИФИКАТ'),
+  cert:    svgImg('Сертификат',        'NEO SPA')
+};
+
+const FALLBACK_IMG = svgImg('Neo SPA', 'ФОТО СКОРО');
+
+// ─── ВИДЕО ───
+// Сейчас — SVG-постеры. Когда в assets/ появятся mp4 с нужными именами,
+// они начнут проигрываться при наведении автоматически.
+function svgPoster(label) { return svgImg(label, 'NEO SPA · СПБ'); }
+
+const VIDEOS = [
+  { label:'Head SPA',      src:'assets/17517719915121.mp4',  poster: svgPoster('Head SPA') },
+  { label:'Japanese Face', src:'assets/18668359584372.mp4',  poster: svgPoster('Japanese Face') },
+  { label:'Tokyo Ritual',  src:'assets/19164721121947_1.mp4',poster: svgPoster('Tokyo Ritual') },
+  { label:'Deep Care',     src:'assets/19579949353532_1.mp4',poster: svgPoster('Deep Care') }
+];
+
+// ═══════════════════════════════════════════════════════════════
+//  ДАННЫЕ ПО УМОЛЧАНИЮ
+// ═══════════════════════════════════════════════════════════════
+const DEFAULT_DATA = {
+  services: [
+    {id:'s1', title:'Barber&Head SPA', short:'Мужской ритуал для головы и бороды', full:'Глубокое очищение, массаж головы и уход за бородой. Идеально для мужчин, ценящих порядок и расслабление.', includes:'Очищение · Массаж головы · Уход за бородой · Тонизирование', price:4500, duration:'60 мин', image:IMG.hair},
+    {id:'s2', title:'Classic Head SPA', short:'Классический ритуал для головы', full:'Мягкое очищение кожи головы, пилинг и расслабляющий массаж. Восстанавливает баланс и снимает стресс.', includes:'Пилинг · Массаж · Маска · Ароматерапия', price:3900, duration:'60 мин', image:IMG.spa},
+    {id:'s3', title:'Japanese Face', short:'Японский уход за лицом', full:'Ритуал с использованием традиционных японских техник: глубокое очищение, массаж лица и питательная маска.', includes:'Очищение · Массаж Кобидо · Маска · Увлажнение', price:5200, duration:'75 мин', image:IMG.face},
+    {id:'s4', title:'Tokyo Head SPA', short:'Токийский ритуал для головы', full:'Комплексная программа: пилинг, массаж, уход за волосами. Вдохновлено ритуалами Токио.', includes:'Пилинг · Массаж · Уход за волосами · Ароматерапия', price:4800, duration:'70 мин', image:IMG.massage},
+    {id:'s5', title:'T-SHOCK', short:'Интенсивное восстановление волос', full:'Процедура для укрепления волос и стимуляции роста. Результат заметен после первого сеанса.', includes:'Скраб · Сыворотка · Массаж · Тонизирование', price:5600, duration:'60 мин', image:IMG.hair},
+    {id:'s6', title:'Deep Care Tokio Inkarami', short:'Глубокий уход Inkarami', full:'Японская система восстановления волос Inkarami. Глубокое питание и реконструкция структуры.', includes:'Очищение · Inkarami · Маска · Уход', price:6800, duration:'90 мин', image:IMG.spa},
+    {id:'s7', title:'Три-комплекс', short:'Комплекс из трёх процедур', full:'Три процедуры в одном сеансе: очищение, питание и восстановление. Максимальный результат.', includes:'Очищение · Питание · Восстановление', price:7500, duration:'120 мин', image:IMG.zen},
+    {id:'s8', title:'Selvert Thermal', short:'Термальный уход Selvert', full:'Профессиональный уход Selvert Thermal. Термальная маска и питательные компоненты.', includes:'Термальная маска · Питание · Уход', price:6200, duration:'80 мин', image:IMG.massage}
+  ],
+  subscriptions: [
+    {id:'sub1', title:'Tokyo Head SPA', short:'Абонемент на 4, 6 или 10 процедур', full:'Регулярные сеансы Tokyo Head SPA по выгодной цене. Экономия до 20%.', includes:['4 процедуры — 17 500 ₽','6 процедур — 24 900 ₽','10 процедур — 39 900 ₽'], price:17500, duration:'70 мин × N', image:IMG.massage},
+    {id:'sub2', title:'Japanese Face', short:'Абонемент на 4, 6 или 10 процедур', full:'Курс японского ухода за лицом. Стойкий результат при регулярном применении.', includes:['4 процедуры — 18 900 ₽','6 процедур — 26 900 ₽','10 процедур — 43 900 ₽'], price:18900, duration:'75 мин × N', image:IMG.face},
+    {id:'sub3', title:'Classic Head SPA', short:'Абонемент на 4, 6 или 10 процедур', full:'Классический уход за головой курсом. Идеально для поддержания баланса.', includes:['4 процедуры — 13 900 ₽','6 процедур — 19 900 ₽','10 процедур — 31 900 ₽'], price:13900, duration:'60 мин × N', image:IMG.spa}
+  ],
+  certificates: [
+    {id:'c3000',  title:'Сертификат 3 000 ₽',  price:3000,  image:IMG.cert},
+    {id:'c5000',  title:'Сертификат 5 000 ₽',  price:5000,  image:IMG.cert},
+    {id:'c7000',  title:'Сертификат 7 000 ₽',  price:7000,  image:IMG.cert},
+    {id:'c10000', title:'Сертификат 10 000 ₽', price:10000, image:IMG.cert},
+    {id:'c15000', title:'Сертификат 15 000 ₽', price:15000, image:IMG.cert},
+    {id:'c18000', title:'Сертификат 18 000 ₽', price:18000, image:IMG.cert},
+    {id:'c20000', title:'Сертификат 20 000 ₽', price:20000, image:IMG.cert},
+    {id:'c25000', title:'Сертификат 25 000 ₽', price:25000, image:IMG.cert},
+    {id:'csub1', title:'Сертификат на Tokyo Head SPA',   price:17500, image:IMG.gift},
+    {id:'csub2', title:'Сертификат на Japanese Face',    price:18900, image:IMG.gift},
+    {id:'csub3', title:'Сертификат на Classic Head SPA', price:13900, image:IMG.gift}
+  ],
+  reviews: [
+    {id:'r1', name:'Анна', role:'Постоянный гость', text:'Невероятная атмосфера и профессионализм. После Tokyo Head SPA чувствую себя обновлённой. Обязательно вернусь!', rating:5},
+    {id:'r2', name:'Михаил', role:'Гость салона', text:'Barber&Head SPA — лучшее, что случалось с моей головой. Мастер — волшебник. Рекомендую всем!', rating:5},
+    {id:'r3', name:'Екатерина', role:'Клиент', text:'Japanese Face превзошёл все ожидания. Кожа сияет, настроение — прекрасное. Спасибо Neo SPA!', rating:5}
+  ],
+  contacts: {
+    phone: '+7 (921) 992-18-88',
+    address: 'Санкт-Петербург, ул. Есенина, 1 к1',
+    email: 'info@parpalace.ru',
+    vk: '#', telegram: '#', whatsapp: '#'
+  }
+};
+let siteData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+
+// ═══════════════════════════════════════════════════════════════
+//  ИНИЦИАЛИЗАЦИЯ
+// ═══════════════════════════════════════════════════════════════
+(function initParticles(){
+  const c = document.getElementById('particles');
+  for (let i=0;i<20;i++){
+    const p = document.createElement('div');
+    p.className='particle';
+    p.style.left=Math.random()*100+'%';
+    p.style.animationDuration=(15+Math.random()*20)+'s';
+    p.style.animationDelay=(-Math.random()*30)+'s';
+    p.style.width=p.style.height=(2+Math.random()*3)+'px';
+    c.appendChild(p);
+  }
+})();
+
+function renderVideos(){
+  const c = document.getElementById('videoCarousel');
+  if (!c) return;
+  c.innerHTML = VIDEOS.map(v => `
+    <div class="video-card">
+      <video muted loop playsinline preload="metadata" poster="${v.poster}"
+             onmouseover="this.play()" onmouseout="this.pause()"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <source src="${v.src}" type="video/mp4">
+      </video>
+      <div class="video-fallback" style="display:none;background-image:url('${v.poster}')"></div>
+      <div class="video-label">${escapeHtml(v.label)}</div>
+    </div>
+  `).join('');
+}
+renderVideos();
+
+const revealObserver = new IntersectionObserver((es)=>{
+  es.forEach(e=>{ if (e.isIntersecting){ e.target.classList.add('visible'); revealObserver.unobserve(e.target);} });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+
+let lastScroll=0;
+const header=document.getElementById('siteHeader');
+window.addEventListener('scroll',()=>{
+  const c=window.scrollY;
+  if (c>lastScroll && c>120) header.classList.add('header-hidden');
+  else header.classList.remove('header-hidden');
+  lastScroll=c;
+},{passive:true});
+
+document.getElementById('burger').addEventListener('click',()=>{
+  document.getElementById('floatingMenu').classList.toggle('open');
+});
+document.querySelectorAll('#floatingMenu a').forEach(a=>{
+  a.addEventListener('click',()=>document.getElementById('floatingMenu').classList.remove('open'));
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  ДАННЫЕ
+// ═══════════════════════════════════════════════════════════════
+async function loadSiteData(){
+  try {
+    const r=await fetch(API_URL,{method:'GET'});
+    if (!r.ok) throw new Error('HTTP '+r.status);
+    const j=await r.json();
+    if (j.content && Object.keys(j.content).length) siteData={...siteData,...j.content};
+  } catch(e){ console.warn('Fallback (нет api.php — это нормально для локального просмотра):',e.message); }
+  renderAll();
+}
+
+function renderAll(){
+  renderCards('servicesGrid',siteData.services,'service');
+  renderCards('subscriptionsGrid',siteData.subscriptions,'subscription');
+  renderCards('certificatesGrid',siteData.certificates,'certificate');
+  renderReviews(); renderContacts();
+}
+
+function renderCards(id, items, type){
+  const g=document.getElementById(id); if(!g) return;
+  g.innerHTML=items.map(i=>`
+    <article class="card reveal" onclick="openCardModal('${type}','${i.id}')">
+      <div class="card-img">
+        <img src="${i.image || FALLBACK_IMG}" alt="${escapeHtml(i.title)}" loading="lazy" onerror="this.src=FALLBACK_IMG">
+      </div>
+      <div class="card-body">
+        <h3>${escapeHtml(i.title)}</h3>
+        <p>${escapeHtml(i.short||'')}</p>
+        <div class="card-footer">
+          <span class="price">${i.price?i.price.toLocaleString('ru-RU')+' ₽':''}</span>
+          ${i.duration?`<span class="duration">${escapeHtml(i.duration)}</span>`:''}
+        </div>
+      </div>
+    </article>`).join('');
+  g.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+}
+
+function renderReviews(){
+  const g=document.getElementById('reviewsGrid'); if(!g) return;
+  g.innerHTML=siteData.reviews.map(r=>`
+    <article class="review-card reveal">
+      <div class="review-stars">${'★'.repeat(r.rating||5)}</div>
+      <p class="review-text">«${escapeHtml(r.text)}»</p>
+      <div class="review-author">${escapeHtml(r.name)}</div>
+      <div class="review-role">${escapeHtml(r.role||'')}</div>
+    </article>`).join('');
+  g.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+}
+
+function renderContacts(){
+  const c=siteData.contacts||{};
+  document.querySelectorAll('[data-contact="phone"]').forEach(el=>{
+    el.textContent=c.phone;
+    el.href='tel:'+(c.phone||'').replace(/[^\d+]/g,'');
+  });
+  document.querySelectorAll('[data-contact="address"]').forEach(el=>el.textContent=c.address||'');
+  document.querySelectorAll('[data-contact="email"]').forEach(el=>{
+    el.textContent=c.email||'';
+    el.href='mailto:'+(c.email||'');
+  });
+  document.querySelectorAll('[data-social]').forEach(el=>{
+    const s=el.dataset.social; if (c[s] && c[s]!=='#') el.href=c[s];
+  });
+}
+
+function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+
+// ═══════════════════════════════════════════════════════════════
+//  МОДАЛКИ
+// ═══════════════════════════════════════════════════════════════
+function openModal(id){ document.getElementById(id).classList.add('active'); document.body.style.overflow='hidden'; }
+function closeModal(id){ document.getElementById(id).classList.remove('active'); document.body.style.overflow=''; }
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',e=>{ if (e.target===o) closeModal(o.id); });
+});
+
+function openCardModal(type,id){
+  const list=type==='service'?siteData.services:type==='subscription'?siteData.subscriptions:siteData.certificates;
+  const it=list.find(x=>String(x.id)===String(id)); if(!it) return;
+  let inc='';
+  if (it.includes){
+    if (Array.isArray(it.includes)) inc='<ul style="padding-left:0;list-style:none;margin:16px 0;">'+it.includes.map(i=>`<li style="padding:6px 0;">✓ ${escapeHtml(i)}</li>`).join('')+'</ul>';
+    else inc=`<p style="color:var(--text-muted);margin:16px 0;">${escapeHtml(it.includes)}</p>`;
+  }
+  document.getElementById('cardModalContent').innerHTML=`
+    <img class="modal-img" src="${it.image || FALLBACK_IMG}" alt="${escapeHtml(it.title)}" onerror="this.src=FALLBACK_IMG">
+    <h2>${escapeHtml(it.title)}</h2>
+    <p style="color:var(--text-muted);margin-bottom:12px;">${escapeHtml(it.full||it.short||'')}</p>
+    ${inc}
+    ${it.price?`<p style="margin-top:16px;"><strong>Цена:</strong> ${it.price.toLocaleString('ru-RU')} ₽</p>`:''}
+    ${it.duration?`<p><strong>Длительность:</strong> ${escapeHtml(it.duration)}</p>`:''}
+    <button class="btn btn-gold" style="width:100%;margin-top:20px;" onclick="openBooking('${type}','${it.id}')">
+      ${type==='certificate'?'Купить':'Записаться'}
+    </button>`;
+  openModal('cardModal');
+}
+
+function openBooking(type,itemId){
+  const list=type==='service'?siteData.services:type==='subscription'?siteData.subscriptions:siteData.certificates;
+  const it=itemId?list.find(x=>String(x.id)===String(itemId)):null;
+  document.getElementById('orderType').value=type;
+  document.getElementById('orderTitle').value=it?it.title:(type==='certificate'?'Сертификат':'Консультация');
+  document.getElementById('bookingTitle').textContent=type==='certificate'?'Покупка сертификата':type==='subscription'?'Оформление абонемента':'Запись на услугу';
+  const dt=document.getElementById('datetimeField');
+  if (type==='certificate') dt.style.display='none'; else dt.style.display='';
+  closeModal('cardModal'); openModal('bookingModal');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ФОРМА ЗАЯВКИ
+// ═══════════════════════════════════════════════════════════════
+document.getElementById('bookingForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const form=e.target;
+  const data=Object.fromEntries(new FormData(form).entries());
+  if (!data.datetime) delete data.datetime;
+  if (!data.comment) delete data.comment;
+  const btn=form.querySelector('button[type="submit"]');
+  const orig=btn.textContent;
+  btn.disabled=true; btn.textContent='Отправка...';
+  try{
+    const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    const j=await r.json();
+    if (!r.ok||j.error) throw new Error(j.message||'Ошибка');
+    alert('✅ Заявка принята!\nНомер: '+j.order_id+'\nМы свяжемся с вами в ближайшее время.');
+    form.reset(); closeModal('bookingModal');
+  }catch(err){
+    alert('❌ Не удалось отправить: '+err.message+'\n\n(Локально без PHP-сервера это ожидаемо. Для теста формы запустите php -S localhost:8000)');
+  }
+  finally{ btn.disabled=false; btn.textContent=orig; }
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  АДМИНКА
+// ═══════════════════════════════════════════════════════════════
+function openAdmin(){
+  openModal('adminModal');
+  if (localStorage.getItem(ADMIN_STORAGE_KEY)) showAdminPanel();
+}
+function adminLogin(){
+  const l=document.getElementById('adminLogin').value.trim();
+  const p=document.getElementById('adminPassword').value;
+  if (l===ADMIN_LOGIN && p===ADMIN_PASSWORD){
+    localStorage.setItem(ADMIN_STORAGE_KEY,ADMIN_SECRET);
+    showAdminPanel();
+  } else alert('Неверный логин или пароль');
+}
+function showAdminPanel(){
+  document.getElementById('adminLoginBlock').style.display='none';
+  document.getElementById('adminPanelBlock').style.display='block';
+  renderAdminTabs();
+}
+function renderAdminTabs(){
+  const tabs=[{id:'services',label:'Услуги'},{id:'subscriptions',label:'Абонементы'},{id:'certificates',label:'Сертификаты'},{id:'reviews',label:'Отзывы'},{id:'contacts',label:'Контакты'}];
+  document.getElementById('adminTabs').innerHTML=tabs.map(t=>`<button class="admin-tab" data-tab="${t.id}" onclick="renderAdminSection('${t.id}')">${t.label}</button>`).join('');
+  renderAdminSection('services');
+}
+function renderAdminSection(section){
+  document.querySelectorAll('.admin-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===section));
+  const c=document.getElementById('adminContent');
+  if (section==='contacts'){
+    const ct=siteData.contacts||{};
+    c.innerHTML=`
+      <label class="form-label"><span>Телефон</span><input type="text" id="cf_phone" value="${escapeHtml(ct.phone||'')}"></label>
+      <label class="form-label"><span>Адрес</span><input type="text" id="cf_address" value="${escapeHtml(ct.address||'')}"></label>
+      <label class="form-label"><span>Email</span><input type="text" id="cf_email" value="${escapeHtml(ct.email||'')}" autocapitalize="none" autocorrect="off"></label>
+      <label class="form-label"><span>ВКонтакте</span><input type="text" id="cf_vk" value="${escapeHtml(ct.vk||'')}" autocapitalize="none" autocorrect="off"></label>
+      <label class="form-label"><span>Telegram</span><input type="text" id="cf_telegram" value="${escapeHtml(ct.telegram||'')}" autocapitalize="none" autocorrect="off"></label>
+      <label class="form-label"><span>WhatsApp</span><input type="text" id="cf_whatsapp" value="${escapeHtml(ct.whatsapp||'')}" autocapitalize="none" autocorrect="off"></label>
+      <div class="admin-actions"><button class="btn btn-gold" onclick="saveContacts()">💾 Сохранить контакты</button></div>`;
+    return;
+  }
+  const items=siteData[section]||[];
+  c.innerHTML=`
+    <div style="max-height:45vh;overflow-y:auto;">
+      ${items.length===0?'<p style="padding:20px;text-align:center;color:var(--text-muted);">Пусто</p>':''}
+      ${items.map((i,idx)=>`
+        <div class="admin-item">
+          <span class="admin-item-title">${escapeHtml(i.title||i.name||i.id)}</span>
+          <button onclick="editAdminItem('${section}',${idx})">✎</button>
+          <button onclick="deleteAdminItem('${section}',${idx})" style="color:#c0392b;border-color:#c0392b;">✕</button>
+        </div>`).join('')}
+    </div>
+    <div class="admin-actions">
+      <button class="btn btn-gold" onclick="addAdminItem('${section}')">+ Добавить</button>
+      <button class="btn btn-outline" onclick="saveSiteData()">💾 Сохранить всё</button>
+      <button class="btn btn-outline" onclick="adminLogout()">Выйти</button>
+    </div>`;
+}
+function saveContacts(){
+  siteData.contacts={
+    phone:document.getElementById('cf_phone').value,
+    address:document.getElementById('cf_address').value,
+    email:document.getElementById('cf_email').value,
+    vk:document.getElementById('cf_vk').value,
+    telegram:document.getElementById('cf_telegram').value,
+    whatsapp:document.getElementById('cf_whatsapp').value
+  };
+  renderContacts(); saveSiteData();
+}
+function addAdminItem(section){
+  const id=section.slice(0,3)+'_'+Date.now();
+  if (section==='reviews') siteData.reviews.push({id,name:'Гость',role:'',text:'Текст отзыва',rating:5});
+  else if (section==='certificates') siteData.certificates.push({id,title:'Новый сертификат',price:0,image:IMG.cert});
+  else siteData[section].push({id,title:'Новая позиция',short:'',full:'',includes:'',price:0,duration:'',image:IMG.spa});
+  renderAdminSection(section);
+}
+function deleteAdminItem(section,idx){
+  if (!confirm('Удалить эту позицию?')) return;
+  siteData[section].splice(idx,1); renderAdminSection(section);
+}
+function editAdminItem(section,idx){
+  const it=siteData[section][idx];
+  if (section==='reviews'){
+    const n=prompt('Имя:',it.name||''); if (n===null) return;
+    const t=prompt('Текст отзыва:',it.text||''); if (t===null) return;
+    const r=prompt('Оценка (1-5):',it.rating||5);
+    it.name=n; it.text=t; it.rating=Math.min(5,Math.max(1,parseInt(r)||5));
+  } else {
+    const t=prompt('Название:',it.title||''); if (t===null) return; it.title=t;
+    if (section!=='certificates'){
+      const p=prompt('Цена (число):',it.price||0); if (p!==null) it.price=Number(p)||0;
+      const d=prompt('Длительность:',it.duration||''); if (d!==null) it.duration=d;
+      const s=prompt('Краткое описание:',it.short||''); if (s!==null) it.short=s;
+    } else {
+      const p=prompt('Номинал (число):',it.price||0); if (p!==null) it.price=Number(p)||0;
+    }
+  }
+  renderAdminSection(section);
+}
+async function saveSiteData(){
+  const token=localStorage.getItem(ADMIN_STORAGE_KEY);
+  if (!token){ alert('Требуется вход в админку'); return; }
+  try{
+    const r=await fetch(API_URL,{method:'PUT',headers:{'Content-Type':'application/json','X-Admin-Token':token},body:JSON.stringify({content:siteData})});
+    const j=await r.json();
+    if (!r.ok||j.error) throw new Error(j.message||'Ошибка');
+    alert('✅ Сохранено'); renderAll();
+  }catch(e){ alert('❌ Ошибка сохранения: '+e.message); }
+}
+function adminLogout(){
+  localStorage.removeItem(ADMIN_STORAGE_KEY);
+  document.getElementById('adminLoginBlock').style.display='';
+  document.getElementById('adminPanelBlock').style.display='none';
+  closeModal('adminModal');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  СКРЫТЫЙ ВХОД В АДМИНКУ
+// ═══════════════════════════════════════════════════════════════
+let logoClicks=0, logoTimer=null;
+document.getElementById('logo').addEventListener('click',(e)=>{
+  e.preventDefault();
+  logoClicks++; clearTimeout(logoTimer);
+  logoTimer=setTimeout(()=>logoClicks=0,1500);
+  if (logoClicks>=5){ logoClicks=0; openAdmin(); }
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  СТАРТ
+// ═══════════════════════════════════════════════════════════════
+document.getElementById('year').textContent=new Date().getFullYear();
+loadSiteData();
+</script>
+</body>
+</html>
