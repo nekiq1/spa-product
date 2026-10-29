@@ -6,217 +6,231 @@
 <title>Neo SPA — Искусство японского расслабления | Санкт-Петербург</title>
 <meta name="description" content="Премиальный японский спа-салон в Санкт-Петербурге. Head SPA, Japanese Face, сертификаты. ул. Есенина, 1 к1.">
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#1b2a2f">
+<meta name="theme-color" content="#121e22">
 <link rel="apple-touch-icon" href="/assets/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ═══ БАЗА ═══ */
+/* ═══ БАЗА И ПЕРЕМЕННЫЕ ═══ */
 :root{
-  --zen:#1b2a2f; --zen-light:#243a40; --olive:#5e6d5a; 
-  --gold:#b8935a; --gold-light:#c9a76e; 
-  --cream:#f4efe6; --cream-dark:#e6ded2; --white:#fbf8f3; 
-  --text-muted:#8a8a80; --border:rgba(184,147,90,.25);
-  --shadow:0 20px 60px rgba(27,42,47,.08); --radius:24px; --radius-sm:16px;
-  --transition:.4s cubic-bezier(.25,.46,.45,.94);
+  --bg-dark:#121e22; --bg-card:#1b2a2f; --bg-card-hover:#21353b;
+  --gold:#c9a76e; --gold-bright:#e3c48e; --gold-dim:rgba(201,167,110,.2);
+  --text-main:#f4efe6; --text-muted:#8a9a96;
+  --border:rgba(201,167,110,.15); --shadow:0 30px 80px rgba(0,0,0,.4);
+  --font-serif:'Cormorant Garamond',serif; --font-sans:'Manrope',sans-serif;
+  --transition:.6s cubic-bezier(.22,1,.36,1);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{font-family:'Manrope',sans-serif;background:var(--cream);color:var(--zen);line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:500;line-height:1.1;letter-spacing:-.01em}
+body{font-family:var(--font-sans);background:var(--bg-dark);color:var(--text-main);line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--font-serif);font-weight:400;line-height:1.1;letter-spacing:-.01em}
 img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,select,textarea{font-family:inherit}
-::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-track{background:var(--cream)}
-::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--bg-dark)}
+::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--gold)}
 
-/* ═══ ФОН ═══ */
-.bg-canvas{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden;background:var(--cream)}
-.bg-blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.3;animation:floatBlob 22s ease-in-out infinite}
-.bg-blob-1{width:600px;height:600px;background:var(--olive);top:-10%;left:-10%}
-.bg-blob-2{width:700px;height:700px;background:var(--gold);bottom:-20%;right:-15%;animation-delay:-7s;opacity:.12}
-@keyframes floatBlob{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(60px,-40px) scale(1.1)}66%{transform:translate(-40px,50px) scale(.95)}}
+/* ═══ АНИМИРОВАННЫЙ ФОН ═══ */
+.bg-canvas{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden;background:var(--bg-dark)}
+.bg-blob{position:absolute;border-radius:50%;filter:blur(100px);opacity:.15;animation:floatBlob 25s ease-in-out infinite}
+.bg-blob-1{width:600px;height:600px;background:var(--gold);top:-10%;left:-10%}
+.bg-blob-2{width:800px;height:800px;background:#2a4a4f;bottom:-20%;right:-15%;animation-delay:-8s}
+@keyframes floatBlob{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(80px,-60px) scale(1.1)}66%{transform:translate(-60px,40px) scale(.9)}}
 
 /* ═══ ШАПКА ═══ */
-.site-header{position:fixed;top:0;left:0;right:0;z-index:100;padding:24px 32px;display:flex;justify-content:space-between;align-items:center;transition:transform .45s ease, background .3s}
+.site-header{position:fixed;top:0;left:0;right:0;z-index:100;padding:24px 32px;display:flex;justify-content:space-between;align-items:center;transition:all .4s ease}
 .site-header.header-hidden{transform:translateY(-100%)}
-.site-header.scrolled{background:rgba(27,42,47,.9);backdrop-filter:blur(12px);padding:16px 32px}
-.logo{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;color:var(--zen);letter-spacing:.08em;cursor:pointer;transition:color .3s;display:flex;align-items:center;gap:12px}
-.scrolled .logo{color:var(--cream)}
-.logo-icon{width:32px;height:32px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--zen);font-size:1rem}
-.menu-btn{display:flex;align-items:center;gap:12px;font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.15em;color:var(--zen);transition:color .3s;padding:8px}
-.scrolled .menu-btn{color:var(--cream)}
+.site-header.scrolled{background:rgba(18,30,34,.85);backdrop-filter:blur(20px);padding:16px 32px;border-bottom:1px solid var(--border)}
+.logo{font-family:var(--font-serif);font-size:1.8rem;font-weight:500;color:var(--text-main);letter-spacing:.1em;cursor:pointer;display:flex;align-items:center;gap:12px}
+.logo-icon{width:36px;height:36px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1.2rem;font-style:italic}
+.header-actions{display:flex;align-items:center;gap:16px}
+.menu-btn{display:flex;align-items:center;gap:12px;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.2em;color:var(--gold);transition:var(--transition);padding:8px}
+.menu-btn:hover{color:var(--gold-bright)}
 .menu-btn .lines{width:24px;height:14px;position:relative}
 .menu-btn .lines span{position:absolute;left:0;width:100%;height:1.5px;background:currentColor;transition:.3s}
 .menu-btn .lines span:nth-child(1){top:0}
 .menu-btn .lines span:nth-child(2){top:6px;width:70%}
 .menu-btn .lines span:nth-child(3){top:12px}
+.profile-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:.3s;color:var(--gold)}
+.profile-btn:hover{background:var(--gold);color:var(--bg-dark);border-color:var(--gold)}
+.profile-btn svg{width:20px;height:20px;fill:currentColor}
 
-/* Полноэкранное меню (ИСПРАВЛЕНО) */
-.menu-overlay{position:fixed;inset:0;background:var(--zen);z-index:999;display:flex;flex-direction:column;align-items:center;padding:80px 24px 40px;opacity:0;pointer-events:none;transition:opacity .4s ease;overflow-y:auto}
+/* ═══ ПОЛНОЭКРАННОЕ МЕНЮ ═══ */
+.menu-overlay{position:fixed;inset:0;background:rgba(18,30,34,.98);z-index:999;display:flex;flex-direction:column;align-items:center;padding:80px 24px 40px;opacity:0;pointer-events:none;transition:opacity .4s ease;overflow-y:auto}
 .menu-overlay.active{opacity:1;pointer-events:auto}
-.menu-close{position:absolute;top:24px;right:32px;font-size:2.5rem;color:var(--cream);transition:transform .3s;line-height:1}
+.menu-close{position:absolute;top:24px;right:32px;font-size:2.5rem;color:var(--gold);transition:transform .4s;line-height:1}
 .menu-close:hover{transform:rotate(90deg)}
-.menu-links{display:flex;flex-direction:column;align-items:center;gap:clamp(12px, 3vh, 24px);margin:auto 0;text-align:center;width:100%}
-.menu-links a{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem, 4vh, 2.8rem);color:var(--cream);transition:color .3s;font-style:italic;line-height:1.2}
+.menu-links{display:flex;flex-direction:column;align-items:center;gap:clamp(16px, 3.5vh, 32px);margin:auto 0;text-align:center;width:100%}
+.menu-links a{font-family:var(--font-serif);font-size:clamp(1.8rem, 4vh, 3rem);color:var(--text-main);transition:color .3s;font-style:italic;line-height:1.1;position:relative}
+.menu-links a::after{content:'';position:absolute;bottom:-4px;left:50%;width:0;height:1px;background:var(--gold);transition:.3s;transform:translateX(-50%)}
 .menu-links a:hover{color:var(--gold)}
-.menu-footer{margin-top:40px;text-align:center;color:rgba(244,239,230,.5);font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;padding-top:24px;border-top:1px solid rgba(255,255,255,.1);width:100%;max-width:300px}
-.menu-footer a{display:block;margin-top:12px;color:var(--gold);text-decoration:none;font-size:.9rem}
+.menu-links a:hover::after{width:100%}
+.menu-footer{margin-top:40px;text-align:center;color:var(--text-muted);font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;padding-top:24px;border-top:1px solid var(--border);width:100%;max-width:340px}
+.menu-footer a{display:block;margin-top:12px;color:var(--gold);font-size:.9rem;letter-spacing:.05em}
 
-/* ═══ HERO ═══ */
-.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 24px;position:relative;background:linear-gradient(rgba(27,42,47,.75), rgba(27,42,47,.85)), url('assets/spa.jpg') center/cover no-repeat;background-attachment:fixed;color:var(--cream)}
-.hero-tag{font-size:.75rem;text-transform:uppercase;letter-spacing:.3em;color:var(--gold-light);margin-bottom:24px;font-weight:600;display:flex;align-items:center;gap:16px}
-.hero-tag::before,.hero-tag::after{content:'';width:40px;height:1px;background:var(--gold-light);opacity:.5}
-.hero h1{font-size:clamp(2.8rem,7vw,6rem);font-weight:400;max-width:900px;margin:0 auto 32px;color:var(--cream);line-height:1.05}
-.hero h1 em{font-style:italic;color:var(--gold)}
-.hero-sub{font-size:clamp(1rem,1.5vw,1.15rem);max-width:600px;margin:0 auto 48px;color:rgba(244,239,230,.85);font-weight:300}
-.hero-actions{display:flex;flex-direction:column;gap:16px;width:100%;max-width:340px}
+/* ═══ HERO С АНИМАЦИЕЙ ═══ */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 24px;position:relative;background:linear-gradient(rgba(18,30,34,.6), rgba(18,30,34,.9)), url('assets/spa.jpg') center/cover no-repeat;background-attachment:fixed}
+.hero-content{max-width:900px;z-index:2}
+.hero-tag{font-size:.7rem;text-transform:uppercase;letter-spacing:.4em;color:var(--gold);margin-bottom:32px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:16px}
+.hero-tag::before,.hero-tag::after{content:'';width:40px;height:1px;background:var(--gold);opacity:.5}
+.hero h1{font-size:clamp(3rem,7vw,6rem);font-weight:300;color:var(--text-main);margin-bottom:24px;line-height:1.05}
+.hero h1 em{font-style:italic;color:var(--gold);font-weight:400}
+.hero-sub{font-size:clamp(1rem,1.5vw,1.2rem);color:var(--text-muted);max-width:600px;margin:0 auto 48px;font-weight:300}
+.hero-actions{display:flex;flex-direction:column;gap:16px;width:100%;max-width:340px;margin:0 auto}
 @media(min-width:600px){.hero-actions{flex-direction:row;max-width:none;justify-content:center}}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:18px 40px;border-radius:100px;font-size:1rem;font-weight:600;transition:var(--transition);white-space:nowrap;letter-spacing:.05em}
-.btn-gold{background:var(--gold);color:var(--zen);border:1px solid var(--gold)}
-.btn-gold:hover{background:var(--gold-light);border-color:var(--gold-light);transform:translateY(-2px);box-shadow:0 12px 32px rgba(184,147,90,.3)}
-.btn-outline{border:1px solid rgba(244,239,230,.3);color:var(--cream);background:rgba(255,255,255,.05);backdrop-filter:blur(10px)}
-.btn-outline:hover{background:rgba(255,255,255,.1);border-color:var(--cream)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:18px 40px;border-radius:100px;font-size:.95rem;font-weight:600;transition:var(--transition);white-space:nowrap;letter-spacing:.05em}
+.btn-gold{background:var(--gold);color:var(--bg-dark);border:1px solid var(--gold)}
+.btn-gold:hover{background:var(--gold-bright);border-color:var(--gold-bright);transform:translateY(-2px);box-shadow:0 15px 40px rgba(201,167,110,.2)}
+.btn-outline{border:1px solid rgba(244,239,230,.3);color:var(--text-main);background:rgba(255,255,255,.03);backdrop-filter:blur(10px)}
+.btn-outline:hover{background:rgba(255,255,255,.08);border-color:var(--gold);color:var(--gold)}
 
-/* ═══ ОБЩИЕ СЕКЦИИ ═══ */
-section{padding:100px 24px;position:relative;content-visibility:auto;contain-intrinsic-size:auto 500px}
-.section-inner{max-width:1100px;margin:0 auto}
-.section-header{text-align:center;margin-bottom:64px;position:relative}
-.section-header .eyebrow{font-size:.75rem;text-transform:uppercase;letter-spacing:.25em;color:var(--gold);font-weight:600;margin-bottom:16px}
-.section-header h2{font-size:clamp(2.2rem,4vw,3.5rem);margin-bottom:20px;color:var(--zen)}
-.section-header h2 em{font-style:italic;color:var(--gold)}
-.section-header p{color:var(--text-muted);max-width:560px;margin:0 auto;font-size:1.05rem}
-.section-decorator{width:8px;height:8px;background:var(--gold);transform:rotate(45deg);margin:0 auto 24px}
-
-/* ═══ СТАТИСТИКА ═══ */
-.stats-section{padding:80px 24px;background:var(--white);border-bottom:1px solid var(--border);border-top:1px solid var(--border)}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;max-width:900px;margin:0 auto;text-align:center}
+/* ═══ АНИМИРОВАННАЯ ИНФОГРАФИКА ═══ */
+.stats-section{padding:80px 24px;background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.stats-section::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at center, rgba(201,167,110,.05) 0%, transparent 70%)}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;max-width:1000px;margin:0 auto;text-align:center;position:relative;z-index:2}
 @media(min-width:768px){.stats-grid{grid-template-columns:repeat(4,1fr)}}
-.stat-num{font-family:'Cormorant Garamond',serif;font-size:3.5rem;color:var(--gold);font-weight:500;line-height:1;display:flex;align-items:center;justify-content:center;gap:8px}
-.stat-num svg{width:28px;height:28px;fill:var(--gold)}
-.stat-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.15em;color:var(--text-muted);margin-top:12px;font-weight:600}
+.stat-item{display:flex;flex-direction:column;align-items:center}
+.stat-num{font-family:var(--font-serif);font-size:clamp(3rem,5vw,4rem);color:var(--gold);font-weight:400;line-height:1;display:flex;align-items:baseline;justify-content:center;gap:4px}
+.stat-num .plus{font-size:.6em;color:var(--gold-bright)}
+.stat-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;color:var(--text-muted);margin-top:16px;font-weight:600}
 
 /* ═══ БЕГУЩАЯ СТРОКА ═══ */
-.marquee{overflow:hidden;white-space:nowrap;padding:24px 0;background:var(--cream-dark);border-bottom:1px solid var(--border)}
-.marquee-inner{display:inline-block;animation:marquee 40s linear infinite;font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--zen);opacity:.6;letter-spacing:.25em}
+.marquee{overflow:hidden;white-space:nowrap;padding:24px 0;background:var(--bg-dark);border-bottom:1px solid var(--border)}
+.marquee-inner{display:inline-block;animation:marquee 50s linear infinite;font-family:var(--font-serif);font-size:1.4rem;color:var(--gold);opacity:.4;letter-spacing:.3em;font-style:italic}
 @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-/* ═══ КАРТОЧКИ (NAGI STYLE) ═══ */
+/* ═══ СЕКЦИИ ═══ */
+section{padding:100px 24px;position:relative;content-visibility:auto;contain-intrinsic-size:auto 500px}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-header{text-align:center;margin-bottom:64px}
+.section-header .eyebrow{font-size:.7rem;text-transform:uppercase;letter-spacing:.3em;color:var(--gold);font-weight:600;margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:16px}
+.section-header .eyebrow::before,.section-header .eyebrow::after{content:'';width:30px;height:1px;background:var(--gold);opacity:.4}
+.section-header h2{font-size:clamp(2.2rem,4.5vw,3.5rem);margin-bottom:20px;color:var(--text-main)}
+.section-header h2 em{font-style:italic;color:var(--gold)}
+.section-header p{color:var(--text-muted);max-width:600px;margin:0 auto;font-size:1.05rem;font-weight:300}
+
+/* ═══ КАРТОЧКИ NAGI STYLE ═══ */
 .cards-grid{display:grid;grid-template-columns:1fr;gap:24px}
 @media(min-width:768px){.cards-grid{grid-template-columns:repeat(2,1fr)}}
-.card{background:var(--white);border-radius:var(--radius);padding:40px;border:1px solid var(--border);transition:var(--transition);display:flex;flex-direction:column;position:relative;overflow:hidden;cursor:pointer}
-.card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--gold)}
-.card-badge{position:absolute;top:32px;right:32px;background:rgba(184,147,90,.1);color:var(--gold);padding:6px 14px;border-radius:100px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;border:1px solid var(--border)}
-.card-category{font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;color:var(--gold);font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-.card-category svg{width:12px;height:12px;fill:var(--gold)}
-.card h3{font-size:2rem;margin-bottom:16px;color:var(--zen);line-height:1.2}
-.card p{font-size:.95rem;color:var(--text-muted);margin-bottom:32px;flex:1;line-height:1.7}
-.card-footer{display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid var(--cream-dark);padding-top:24px;margin-top:auto}
-.price{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;color:var(--zen);display:flex;flex-direction:column}
-.price span{font-family:'Manrope',sans-serif;font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);font-weight:600;margin-bottom:4px}
-.card-link{font-size:.75rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;display:flex;align-items:center;gap:8px}
+.card{background:var(--bg-card);border-radius:24px;padding:40px;border:1px solid var(--border);transition:var(--transition);display:flex;flex-direction:column;position:relative;overflow:hidden;cursor:pointer}
+.card:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:var(--gold);background:var(--bg-card-hover)}
+.card-badge{position:absolute;top:32px;right:32px;background:rgba(201,167,110,.1);color:var(--gold);padding:6px 14px;border-radius:100px;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;border:1px solid var(--border)}
+.card-category{font-size:.65rem;text-transform:uppercase;letter-spacing:.2em;color:var(--gold);font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.card-category svg{width:14px;height:14px;fill:var(--gold)}
+.card h3{font-size:2rem;margin-bottom:16px;color:var(--text-main);line-height:1.2}
+.card p{font-size:.95rem;color:var(--text-muted);margin-bottom:32px;flex:1;line-height:1.7;font-weight:300}
+.card-footer{display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid var(--border);padding-top:24px;margin-top:auto}
+.price{font-family:var(--font-serif);font-size:1.8rem;font-weight:500;color:var(--gold);display:flex;flex-direction:column}
+.price span{font-family:var(--font-sans);font-size:.6rem;text-transform:uppercase;letter-spacing:.15em;color:var(--text-muted);font-weight:600;margin-bottom:4px}
+.card-link{font-size:.7rem;font-weight:700;color:var(--text-main);text-transform:uppercase;letter-spacing:.15em;display:flex;align-items:center;gap:8px}
 .card-link svg{width:16px;height:16px;transition:transform .3s}
-.card:hover .card-link svg{transform:translateX(6px)}
+.card:hover .card-link svg{transform:translateX(6px);color:var(--gold)}
 
 /* ═══ ВИДЕО ═══ */
 .video-carousel{display:flex;gap:20px;overflow-x:auto;padding:20px 0 40px;scroll-snap-type:x mandatory;scrollbar-width:none}
 .video-carousel::-webkit-scrollbar{display:none}
-.video-card{flex:0 0 280px;aspect-ratio:9/16;border-radius:var(--radius);overflow:hidden;position:relative;scroll-snap-align:center;box-shadow:var(--shadow);background:var(--zen)}
-.video-card video{width:100%;height:100%;object-fit:cover}
-.video-card .video-label{position:absolute;bottom:16px;left:16px;color:var(--white);font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;background:rgba(27,42,47,.8);padding:8px 16px;border-radius:100px;backdrop-filter:blur(8px)}
+.video-card{flex:0 0 280px;aspect-ratio:9/16;border-radius:24px;overflow:hidden;position:relative;scroll-snap-align:center;box-shadow:var(--shadow);background:var(--bg-card);border:1px solid var(--border)}
+.video-card video{width:100%;height:100%;object-fit:cover;opacity:.8;transition:opacity .3s}
+.video-card:hover video{opacity:1}
+.video-card .video-label{position:absolute;bottom:20px;left:20px;color:var(--text-main);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;background:rgba(18,30,34,.8);padding:8px 16px;border-radius:100px;backdrop-filter:blur(10px);border:1px solid var(--border)}
 
 /* ═══ ОТЗЫВЫ ═══ */
-.review-card{background:var(--white);border-radius:var(--radius);padding:40px;border:1px solid var(--border);display:flex;flex-direction:column;justify-content:space-between}
-.review-stars{color:var(--gold);font-size:1.1rem;letter-spacing:3px;margin-bottom:24px}
-.review-text{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--zen);margin-bottom:32px;font-style:italic;line-height:1.4}
-.review-author{display:flex;align-items:center;gap:16px;border-top:1px solid var(--cream-dark);padding-top:24px}
-.review-avatar{width:48px;height:48px;border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--gold);border:1px solid var(--border)}
-.review-info h4{font-size:.95rem;font-weight:700;margin-bottom:2px;font-family:'Manrope',sans-serif;color:var(--zen)}
-.review-info span{font-size:.8rem;color:var(--text-muted)}
+.review-card{background:var(--bg-card);border-radius:24px;padding:40px;border:1px solid var(--border);display:flex;flex-direction:column;justify-content:space-between}
+.review-stars{color:var(--gold);font-size:1rem;letter-spacing:4px;margin-bottom:24px}
+.review-text{font-family:var(--font-serif);font-size:1.5rem;color:var(--text-main);margin-bottom:32px;font-style:italic;line-height:1.4;font-weight:300}
+.review-author{display:flex;align-items:center;gap:16px;border-top:1px solid var(--border);padding-top:24px}
+.review-avatar{width:48px;height:48px;border-radius:50%;background:rgba(201,167,110,.1);display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-size:1.4rem;color:var(--gold);border:1px solid var(--border)}
+.review-info h4{font-size:.95rem;font-weight:600;margin-bottom:2px;font-family:var(--font-sans);color:var(--text-main)}
+.review-info span{font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em}
 
 /* ═══ КОСМЕТИКА ═══ */
 .cosmetics-grid{display:grid;grid-template-columns:1fr;gap:24px}
 @media(min-width:768px){.cosmetics-grid{grid-template-columns:repeat(2,1fr)}}
-.cosmetic-card{background:var(--white);border-radius:var(--radius);padding:40px;border:1px solid var(--border);text-align:left;display:flex;gap:24px;align-items:flex-start}
-.cosmetic-icon{width:64px;height:64px;border-radius:50%;background:rgba(184,147,90,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border)}
+.cosmetic-card{background:var(--bg-card);border-radius:24px;padding:40px;border:1px solid var(--border);display:flex;gap:24px;align-items:flex-start;transition:var(--transition)}
+.cosmetic-card:hover{border-color:var(--gold);background:var(--bg-card-hover)}
+.cosmetic-icon{width:64px;height:64px;border-radius:50%;background:rgba(201,167,110,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border)}
 .cosmetic-icon svg{width:28px;height:28px;stroke:var(--gold);fill:none;stroke-width:1.5}
-.cosmetic-card h3{font-size:1.6rem;margin-bottom:12px;color:var(--zen)}
-.cosmetic-card p{font-size:.95rem;color:var(--text-muted);line-height:1.6}
+.cosmetic-card h3{font-size:1.6rem;margin-bottom:12px;color:var(--text-main)}
+.cosmetic-card p{font-size:.95rem;color:var(--text-muted);line-height:1.6;font-weight:300}
 
 /* ═══ ПРАВИЛА ═══ */
-.rules-section{background:var(--zen);color:var(--cream);padding:100px 24px;border-radius:var(--radius);max-width:1200px;margin:0 auto}
+.rules-section{background:var(--bg-card);padding:100px 24px;border-radius:32px;max-width:1200px;margin:0 auto;border:1px solid var(--border)}
 .rules-grid{display:grid;grid-template-columns:1fr;gap:60px;max-width:900px;margin:0 auto}
 @media(min-width:768px){.rules-grid{grid-template-columns:1fr 1fr}}
 .rule-item{display:flex;gap:24px;margin-bottom:40px}
-.rule-num{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--gold);font-style:italic;flex-shrink:0;line-height:1}
-.rule-title{font-weight:600;margin-bottom:8px;font-size:1.1rem;color:var(--cream)}
-.rule-text{color:rgba(244,239,230,.7);font-size:.95rem;line-height:1.7}
+.rule-num{font-family:var(--font-serif);font-size:2rem;color:var(--gold);font-style:italic;flex-shrink:0;line-height:1}
+.rule-title{font-weight:600;margin-bottom:8px;font-size:1.1rem;color:var(--text-main)}
+.rule-text{color:var(--text-muted);font-size:.95rem;line-height:1.7;font-weight:300}
 .info-item{margin-bottom:32px}
-.info-q{font-weight:600;color:var(--gold-light);margin-bottom:8px;font-size:1.1rem}
-.info-a{color:rgba(244,239,230,.7);font-size:.95rem;line-height:1.6}
+.info-q{font-weight:600;color:var(--gold);margin-bottom:8px;font-size:1.05rem}
+.info-a{color:var(--text-muted);font-size:.95rem;line-height:1.6;font-weight:300}
 
 /* ═══ FAQ ═══ */
 .faq-list{max-width:800px;margin:0 auto}
-.faq-item{background:var(--white);border-radius:var(--radius-sm);margin-bottom:16px;border:1px solid var(--border);overflow:hidden;transition:border-color .3s}
+.faq-item{background:var(--bg-card);border-radius:16px;margin-bottom:16px;border:1px solid var(--border);overflow:hidden;transition:border-color .3s}
 .faq-item:hover{border-color:var(--gold)}
-.faq-question{padding:24px 32px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:600;gap:16px;font-size:1.1rem;color:var(--zen)}
+.faq-question{padding:24px 32px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:500;gap:16px;font-size:1.05rem;color:var(--text-main)}
 .faq-toggle{color:var(--gold);font-size:1.5rem;transition:transform .3s;flex-shrink:0;font-weight:300}
 .faq-item.open .faq-toggle{transform:rotate(45deg)}
-.faq-answer{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 32px;color:var(--text-muted);font-size:.95rem;line-height:1.7}
+.faq-answer{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 32px;color:var(--text-muted);font-size:.95rem;line-height:1.7;font-weight:300}
 .faq-item.open .faq-answer{max-height:300px;padding:0 32px 32px}
 
 /* ═══ КОНТАКТЫ ═══ */
-.contact-section{background:var(--zen);color:var(--cream);padding:100px 24px;border-radius:var(--radius) var(--radius) 0 0}
+.contact-section{background:var(--bg-card);padding:100px 24px;border-radius:32px 32px 0 0;border-top:1px solid var(--border)}
 .contact-grid{display:grid;grid-template-columns:1fr;gap:60px;max-width:1100px;margin:0 auto}
 @media(min-width:768px){.contact-grid{grid-template-columns:1fr 1fr}}
-.contact-block h3{font-size:.8rem;text-transform:uppercase;letter-spacing:.2em;color:var(--gold);margin-bottom:32px}
-.contact-block a.big-link{display:block;font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--cream);margin-bottom:16px;transition:color .3s}
+.contact-block h3{font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;color:var(--gold);margin-bottom:32px;font-weight:600}
+.contact-block a.big-link{display:block;font-family:var(--font-serif);font-size:2rem;color:var(--text-main);margin-bottom:16px;transition:color .3s}
 .contact-block a.big-link:hover{color:var(--gold)}
-.contact-block p{color:rgba(244,239,230,.7);margin-bottom:12px;font-size:1.05rem}
-.map-placeholder{width:100%;height:300px;background:var(--zen-light);border-radius:var(--radius-sm);border:1px solid rgba(184,147,90,.2);display:flex;align-items:center;justify-content:center;margin-top:32px;color:var(--gold);font-size:.9rem;position:relative;overflow:hidden}
-.map-placeholder::before{content:'';position:absolute;inset:0;background:url('https://static-maps.yandex.ru/1.x/?ll=30.351,59.998&z=14&l=map&size=600,300&pt=30.351,59.998,pm2rdm') center/cover;opacity:.3;filter:grayscale(1)}
-.map-btn{position:relative;z-index:2;background:rgba(27,42,47,.8);padding:12px 24px;border-radius:100px;border:1px solid var(--gold);color:var(--gold);font-weight:600;font-size:.85rem;text-transform:uppercase;letter-spacing:.1em;backdrop-filter:blur(4px);transition:.3s}
-.map-btn:hover{background:var(--gold);color:var(--zen)}
+.contact-block p{color:var(--text-muted);margin-bottom:12px;font-size:1rem;font-weight:300}
+.map-placeholder{width:100%;height:280px;background:var(--bg-dark);border-radius:16px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin-top:32px;position:relative;overflow:hidden}
+.map-placeholder::before{content:'';position:absolute;inset:0;background:url('https://static-maps.yandex.ru/1.x/?ll=30.351,59.998&z=14&l=map&size=600,300&pt=30.351,59.998,pm2rdm') center/cover;opacity:.15;filter:grayscale(1)}
+.map-btn{position:relative;z-index:2;background:rgba(18,30,34,.8);padding:12px 24px;border-radius:100px;border:1px solid var(--gold);color:var(--gold);font-weight:600;font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;backdrop-filter:blur(10px);transition:.3s}
+.map-btn:hover{background:var(--gold);color:var(--bg-dark)}
 .contact-actions{display:flex;flex-direction:column;gap:16px;margin-top:40px}
 
 /* ═══ ПОДВАЛ ═══ */
-footer{text-align:center;padding:40px 24px;background:var(--zen);color:rgba(244,239,230,.4);font-size:.8rem;letter-spacing:.05em;border-top:1px solid rgba(255,255,255,.05)}
+footer{text-align:center;padding:40px 24px;background:var(--bg-card);color:var(--text-muted);font-size:.75rem;letter-spacing:.05em;border-top:1px solid var(--border)}
 footer a{color:var(--gold);text-decoration:none}
 
 /* ═══ МОДАЛКИ ═══ */
-.modal-overlay{position:fixed;inset:0;background:rgba(27,42,47,.85);backdrop-filter:blur(10px);z-index:1000;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-overlay{position:fixed;inset:0;background:rgba(18,30,34,.9);backdrop-filter:blur(15px);z-index:1000;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
 @media(min-width:600px){.modal-overlay{align-items:center;padding:20px}}
 .modal-overlay.active{opacity:1;pointer-events:auto}
-.modal{background:var(--white);border-radius:var(--radius) var(--radius) 0 0;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;padding:40px;position:relative;transform:translateY(100%);transition:transform .3s}
-@media(min-width:600px){.modal{border-radius:var(--radius);transform:translateY(20px) scale(.97)}}
+.modal{background:var(--bg-card);border-radius:24px 24px 0 0;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;padding:40px;position:relative;transform:translateY(100%);transition:transform .4s cubic-bezier(.22,1,.36,1);border:1px solid var(--border);border-bottom:none}
+@media(min-width:600px){.modal{border-radius:24px;transform:translateY(30px) scale(.95);border-bottom:1px solid var(--border)}}
 .modal-overlay.active .modal{transform:translateY(0) scale(1)}
-.modal-close{position:absolute;top:24px;right:24px;width:40px;height:40px;border-radius:50%;background:var(--cream);font-size:1.5rem;display:flex;align-items:center;justify-content:center;z-index:2;transition:.3s}
-.modal-close:hover{background:var(--cream-dark);transform:rotate(90deg)}
-.modal-img{width:100%;height:260px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:32px}
-.modal h2{font-size:2.2rem;margin-bottom:16px;padding-right:40px;color:var(--zen)}
-.modal p{color:var(--text-muted);margin-bottom:24px;font-size:1rem;line-height:1.6}
+.modal-close{position:absolute;top:24px;right:24px;width:40px;height:40px;border-radius:50%;background:var(--bg-dark);font-size:1.5rem;display:flex;align-items:center;justify-content:center;z-index:2;transition:.3s;color:var(--text-main);border:1px solid var(--border)}
+.modal-close:hover{background:var(--gold);color:var(--bg-dark);transform:rotate(90deg)}
+.modal-img{width:100%;height:260px;object-fit:cover;border-radius:16px;margin-bottom:32px;border:1px solid var(--border)}
+.modal h2{font-size:2.2rem;margin-bottom:16px;padding-right:40px;color:var(--text-main)}
+.modal p{color:var(--text-muted);margin-bottom:24px;font-size:1rem;line-height:1.7;font-weight:300}
 
 /* Формы */
 .form-label{display:block;margin-bottom:24px}
-.form-label span{display:block;font-size:.75rem;font-weight:700;margin-bottom:8px;color:var(--zen-light);text-transform:uppercase;letter-spacing:.1em}
-.form-label input,.form-label select,.form-label textarea{width:100%;padding:16px;border:1.5px solid var(--cream-dark);border-radius:12px;font-size:1rem;background:var(--cream);color:var(--zen);transition:border-color .2s;-webkit-appearance:none;appearance:none}
-.form-label input:focus,.form-label select:focus,.form-label textarea:focus{outline:none;border-color:var(--gold);background:var(--white);box-shadow:0 0 0 4px rgba(184,147,90,.1)}
+.form-label span{display:block;font-size:.7rem;font-weight:700;margin-bottom:8px;color:var(--gold);text-transform:uppercase;letter-spacing:.15em}
+.form-label input,.form-label select,.form-label textarea{width:100%;padding:16px;border:1px solid var(--border);border-radius:12px;font-size:1rem;background:var(--bg-dark);color:var(--text-main);transition:border-color .2s;-webkit-appearance:none;appearance:none}
+.form-label input:focus,.form-label select:focus,.form-label textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,167,110,.1)}
 
 /* Админка */
 .admin-tabs{display:flex;gap:8px;margin-bottom:32px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
 .admin-tabs::-webkit-scrollbar{display:none}
-.admin-tab{padding:10px 20px;border-radius:100px;font-size:.8rem;font-weight:700;border:1px solid var(--cream-dark);background:var(--white);white-space:nowrap;text-transform:uppercase;letter-spacing:.05em;transition:.3s}
-.admin-tab.active{background:var(--zen);color:var(--cream);border-color:var(--zen)}
-.admin-item{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--cream-dark)}
-.admin-item-title{font-size:.95rem;font-weight:600;color:var(--zen)}
+.admin-tab{padding:10px 20px;border-radius:100px;font-size:.75rem;font-weight:600;border:1px solid var(--border);background:transparent;white-space:nowrap;text-transform:uppercase;letter-spacing:.05em;transition:.3s;color:var(--text-muted)}
+.admin-tab.active{background:var(--gold);color:var(--bg-dark);border-color:var(--gold)}
+.admin-item{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--border)}
+.admin-item-title{font-size:.95rem;font-weight:500;color:var(--text-main)}
 .admin-actions{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
 
-/* Анимации */
+/* ═══ АНИМАЦИИ ПОЯВЛЕНИЯ ═══ */
 .reveal{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
 .reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
 @media(prefers-reduced-motion:reduce){.reveal{transition:none;opacity:1;transform:none}.bg-blob,.marquee-inner{animation:none!important}}
 </style>
 </head>
@@ -227,10 +241,15 @@ footer a{color:var(--gold);text-decoration:none}
 <!-- ШАПКА -->
 <header class="site-header" id="siteHeader">
   <a href="#" class="logo" id="logo"><span class="logo-icon">N</span>Neo SPA</a>
-  <button class="menu-btn" onclick="toggleMenu()">
-    <span>Меню</span>
-    <div class="lines"><span></span><span></span><span></span></div>
-  </button>
+  <div class="header-actions">
+    <button class="profile-btn" onclick="openAccount()" aria-label="Личный кабинет">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    </button>
+    <button class="menu-btn" onclick="toggleMenu()">
+      <span>Меню</span>
+      <div class="lines"><span></span><span></span><span></span></div>
+    </button>
+  </div>
 </header>
 
 <!-- ПОЛНОЭКРАННОЕ МЕНЮ -->
@@ -245,7 +264,6 @@ footer a{color:var(--gold);text-decoration:none}
     <a href="#reviews" onclick="toggleMenu()">Отзывы</a>
     <a href="#faq" onclick="toggleMenu()">Вопросы</a>
     <a href="#rules" onclick="toggleMenu()">Правила</a>
-    <a href="#" onclick="openAccount(); toggleMenu();" style="color:var(--gold); margin-top:16px; font-size:1.5rem;">Войти / Админ</a>
   </div>
   <div class="menu-footer">
     Санкт-Петербург, ул. Есенина, 1 к1<br>
@@ -255,22 +273,36 @@ footer a{color:var(--gold);text-decoration:none}
 
 <!-- HERO -->
 <section class="hero" id="hero">
-  <div class="hero-tag">Добро пожаловать в Neo SPA</div>
-  <h1>Искусство <em>японского</em><br>расслабления</h1>
-  <p class="hero-sub">Погрузитесь в атмосферу абсолютного спокойствия. Уникальные ритуалы для восстановления баланса тела и разума.</p>
-  <div class="hero-actions">
-    <button class="btn btn-gold" onclick="openBooking('service')">Забронировать визит</button>
-    <button class="btn btn-outline" onclick="openBooking('certificate')">Приобрести сертификат</button>
+  <div class="hero-content">
+    <div class="hero-tag reveal">Добро пожаловать в Neo SPA</div>
+    <h1 class="reveal reveal-delay-1">Искусство <em>японского</em><br>расслабления</h1>
+    <p class="hero-sub reveal reveal-delay-2">Погрузитесь в атмосферу абсолютного спокойствия. Уникальные ритуалы для восстановления баланса тела и разума в самом центре Санкт-Петербурга.</p>
+    <div class="hero-actions reveal reveal-delay-3">
+      <button class="btn btn-gold" onclick="openBooking('service')">Забронировать визит</button>
+      <button class="btn btn-outline" onclick="openBooking('certificate')">Приобрести сертификат</button>
+    </div>
   </div>
 </section>
 
-<!-- СТАТИСТИКА -->
+<!-- ИНФОГРАФИКА С АНИМАЦИЕЙ -->
 <section class="stats-section">
-  <div class="stats-grid reveal">
-    <div><div class="stat-num">5+</div><div class="stat-label">Лет опыта</div></div>
-    <div><div class="stat-num">2000+</div><div class="stat-label">Гостей</div></div>
-    <div><div class="stat-num">8</div><div class="stat-label">Ритуалов</div></div>
-    <div><div class="stat-num">5.0 <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div><div class="stat-label">Рейтинг</div></div>
+  <div class="stats-grid">
+    <div class="stat-item reveal">
+      <div class="stat-num" data-target="5">0<span class="plus">+</span></div>
+      <div class="stat-label">Лет опыта</div>
+    </div>
+    <div class="stat-item reveal reveal-delay-1">
+      <div class="stat-num" data-target="2000">0<span class="plus">+</span></div>
+      <div class="stat-label">Довольных гостей</div>
+    </div>
+    <div class="stat-item reveal reveal-delay-2">
+      <div class="stat-num" data-target="8">0</div>
+      <div class="stat-label">Авторских ритуалов</div>
+    </div>
+    <div class="stat-item reveal reveal-delay-3">
+      <div class="stat-num">5.0</div>
+      <div class="stat-label">Средняя оценка</div>
+    </div>
   </div>
 </section>
 
@@ -283,10 +315,9 @@ footer a{color:var(--gold);text-decoration:none}
 <section id="about">
   <div class="section-inner">
     <div class="section-header reveal">
-      <div class="section-decorator"></div>
       <div class="eyebrow">Атмосфера</div>
       <h2>Ваш личный <em>ритуал</em></h2>
-      <p>Перелистывайте кадры, чтобы увидеть наши сеансы.</p>
+      <p>Перелистывайте кадры, чтобы увидеть наши сеансы и погрузиться в атмосферу салона.</p>
     </div>
     <div class="video-carousel reveal" id="videoCarousel"></div>
   </div>
@@ -296,23 +327,21 @@ footer a{color:var(--gold);text-decoration:none}
 <section id="services">
   <div class="section-inner">
     <div class="section-header reveal">
-      <div class="section-decorator"></div>
       <div class="eyebrow">Выберите свой ритуал</div>
       <h2>Программы</h2>
-      <p>Мы разработали несколько направлений, чтобы вы могли подобрать идеальный уход.</p>
+      <p>Мы разработали несколько направлений, чтобы вы могли подобрать идеальный уход для тела и души.</p>
     </div>
     <div class="cards-grid" id="servicesGrid"></div>
   </div>
 </section>
 
 <!-- АБОНЕМЕНТЫ -->
-<section id="subscriptions" style="background:var(--white); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+<section id="subscriptions" style="background:var(--bg-card); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
   <div class="section-inner">
     <div class="section-header reveal">
-      <div class="section-decorator"></div>
       <div class="eyebrow">Курсы процедур</div>
       <h2>Абонементы</h2>
-      <p>Регулярный уход по специальной цене. Экономия до 20%.</p>
+      <p>Регулярный уход по специальной цене. Экономия до 20% при покупке курса.</p>
     </div>
     <div class="cards-grid" id="subscriptionsGrid"></div>
   </div>
@@ -322,40 +351,38 @@ footer a{color:var(--gold);text-decoration:none}
 <section id="certificates">
   <div class="section-inner">
     <div class="section-header reveal">
-      <div class="section-decorator"></div>
       <div class="eyebrow">Идеальный подарок</div>
       <h2>Подарочные <em>сертификаты</em></h2>
-      <p>Подарите мгновение гармонии близким.</p>
+      <p>Подарите мгновение гармонии и заботы близким людям.</p>
     </div>
     <div class="cards-grid" id="certificatesGrid"></div>
   </div>
 </section>
 
 <!-- КОСМЕТИКА -->
-<section id="cosmetics" style="background:var(--white); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+<section id="cosmetics" style="background:var(--bg-card); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
   <div class="section-inner">
     <div class="section-header reveal">
-      <div class="section-decorator"></div>
       <div class="eyebrow">Что мы используем</div>
       <h2>Премиальная <em>косметика</em></h2>
-      <p>Лучшие бренды из Франции, Испании и Японии.</p>
+      <p>Лучшие бренды из Франции, Испании и Японии для достижения максимального результата.</p>
     </div>
     <div class="cosmetics-grid reveal">
       <div class="cosmetic-card">
         <div class="cosmetic-icon"><svg viewBox="0 0 24 24"><path d="M9 3L7.17 5H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2h-3.17L15 3H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg></div>
-        <div><h3>Selvert Thermal</h3><p>Термальная вода и пептиды. Глубокое увлажнение и защита.</p></div>
+        <div><h3>Selvert Thermal</h3><p>Термальная вода и пептиды. Глубокое увлажнение и защита кожи на клеточном уровне.</p></div>
       </div>
       <div class="cosmetic-card">
         <div class="cosmetic-icon"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
-        <div><h3>Sothys</h3><p>Французская косметика. Фитотерапия и уникальные текстуры.</p></div>
+        <div><h3>Sothys</h3><p>Французская косметика премиум-класса. Фитотерапия и уникальные текстуры для омоложения.</p></div>
       </div>
       <div class="cosmetic-card">
         <div class="cosmetic-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
-        <div><h3>Tokio Head Spa</h3><p>Аутентичная японская линия ухода за кожей головы.</p></div>
+        <div><h3>Tokio Head Spa</h3><p>Аутентичная японская линия ухода за кожей головы. Баланс себума и глубокое очищение.</p></div>
       </div>
       <div class="cosmetic-card">
         <div class="cosmetic-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-        <div><h3>Tokio Inkarami</h3><p>Уход за волосами с аминокислотами и шелком.</p></div>
+        <div><h3>Tokio Inkarami</h3><p>Инновационный уход за волосами с аминокислотами и шелком для восстановления структуры.</p></div>
       </div>
     </div>
   </div>
@@ -365,7 +392,6 @@ footer a{color:var(--gold);text-decoration:none}
 <section id="reviews">
   <div class="section-inner">
     <div class="section-header reveal">
-      <div class="section-decorator"></div>
       <div class="eyebrow">Отзывы гостей</div>
       <h2>Что о нас <em>говорят</em></h2>
       <p>Настоящие впечатления наших гостей после визита.</p>
@@ -377,22 +403,22 @@ footer a{color:var(--gold);text-decoration:none}
 <!-- ПРАВИЛА -->
 <section id="rules" style="padding:0 24px;">
   <div class="rules-section reveal">
-    <div class="section-header">
-      <div class="section-decorator"></div>
-      <h2 style="color:var(--cream);">Правила Neo SPA</h2>
-      <p style="color:rgba(244,239,230,.6);">Чтобы ваше пребывание было максимально комфортным.</p>
+    <div class="section-header" style="margin-bottom:48px;">
+      <div class="eyebrow" style="justify-content:center;">Важная информация</div>
+      <h2 style="color:var(--text-main);">Правила Neo SPA</h2>
+      <p style="color:var(--text-muted);">Чтобы ваше пребывание было максимально комфортным и безопасным.</p>
     </div>
     <div class="rules-grid">
       <div>
-        <div class="rule-item"><div class="rule-num">01</div><div><div class="rule-title">Тишина и покой</div><div class="rule-text">Пожалуйста, отключите звук телефона и соблюдайте тишину.</div></div></div>
-        <div class="rule-item"><div class="rule-num">02</div><div><div class="rule-title">Пунктуальность</div><div class="rule-text">Приходите за 5–10 минут до начала сеанса.</div></div></div>
-        <div class="rule-item"><div class="rule-num">03</div><div><div class="rule-title">Здоровье</div><div class="rule-text">Сообщите мастеру об аллергиях и противопоказаниях.</div></div></div>
-        <div class="rule-item"><div class="rule-num">04</div><div><div class="rule-title">Отмена записи</div><div class="rule-text">Сообщите минимум за 3–4 часа до визита.</div></div></div>
+        <div class="rule-item"><div class="rule-num">01</div><div><div class="rule-title">Тишина и покой</div><div class="rule-text">Пожалуйста, отключите звук телефона и соблюдайте тишину, чтобы не нарушать гармонию других гостей.</div></div></div>
+        <div class="rule-item"><div class="rule-num">02</div><div><div class="rule-title">Пунктуальность</div><div class="rule-text">Приходите за 5–10 минут до начала сеанса, чтобы спокойно подготовиться и настроиться на ритуал.</div></div></div>
+        <div class="rule-item"><div class="rule-num">03</div><div><div class="rule-title">Здоровье</div><div class="rule-text">Сообщите мастеру об аллергиях и противопоказаниях перед началом процедуры.</div></div></div>
+        <div class="rule-item"><div class="rule-num">04</div><div><div class="rule-title">Отмена записи</div><div class="rule-text">Если планы изменились, сообщите нам минимум за 3–4 часа до визита.</div></div></div>
       </div>
       <div>
-        <div class="info-item"><div class="info-q">Нужно ли брать с собой полотенце и тапочки?</div><div class="info-a">Нет. Все принадлежности мы предоставим.</div></div>
-        <div class="info-item"><div class="info-q">Стоит ли приходить заранее?</div><div class="info-a">Рекомендуем прийти за 5–10 минут, чтобы спокойно подготовиться.</div></div>
-        <div class="info-item"><div class="info-q">Где вы находитесь?</div><div class="info-a">Санкт-Петербург, ул. Есенина, 1 к1.</div></div>
+        <div class="info-item"><div class="info-q">Нужно ли брать с собой полотенце и тапочки?</div><div class="info-a">Нет. Все необходимые принадлежности, включая халат и тапочки, мы предоставим.</div></div>
+        <div class="info-item"><div class="info-q">Стоит ли приходить заранее?</div><div class="info-a">Да, рекомендуем прийти за 5–10 минут, чтобы спокойно подготовиться и выпить чашку чая.</div></div>
+        <div class="info-item"><div class="info-q">Где вы находитесь?</div><div class="info-a">Санкт-Петербург, ул. Есенина, 1 к1. Удобная парковка и близость к метро.</div></div>
       </div>
     </div>
   </div>
@@ -402,12 +428,11 @@ footer a{color:var(--gold);text-decoration:none}
 <section id="faq">
   <div class="section-inner">
     <div class="section-header reveal">
-      <div class="section-decorator"></div>
       <div class="eyebrow">Вопросы</div>
       <h2>Частые вопросы</h2>
     </div>
     <div class="faq-list reveal">
-      <div class="faq-item"><div class="faq-question" onclick="this.parentElement.classList.toggle('open')"><span>Как записаться на процедуру?</span><span class="faq-toggle">+</span></div><div class="faq-answer"><p>Нажмите «Забронировать визит» на главной или выберите программу в разделе «Услуги». Заполните форму, и мы свяжемся с вами.</p></div></div>
+      <div class="faq-item"><div class="faq-question" onclick="this.parentElement.classList.toggle('open')"><span>Как записаться на процедуру?</span><span class="faq-toggle">+</span></div><div class="faq-answer"><p>Нажмите «Забронировать визит» на главной или выберите программу в разделе «Услуги». Заполните форму, и мы свяжемся с вами для подтверждения.</p></div></div>
       <div class="faq-item"><div class="faq-question" onclick="this.parentElement.classList.toggle('open')"><span>Как долго действует сертификат?</span><span class="faq-toggle">+</span></div><div class="faq-answer"><p>Сертификат действителен 12 месяцев с момента приобретения. Его можно использовать на любые услуги салона.</p></div></div>
       <div class="faq-item"><div class="faq-question" onclick="this.parentElement.classList.toggle('open')"><span>Есть ли противопоказания?</span><span class="faq-toggle">+</span></div><div class="faq-answer"><p>Да, при некоторых заболеваниях кожи головы отдельные процедуры могут быть не рекомендованы. Мастер проведёт консультацию перед сеансом.</p></div></div>
     </div>
@@ -420,11 +445,11 @@ footer a{color:var(--gold);text-decoration:none}
     <div class="contact-block reveal">
       <h3>Связаться</h3>
       <a href="tel:+79219921888" class="big-link">+7 (921) 992-18-88</a>
-      <a href="#" data-social="vk" style="font-size:1.1rem; font-family:inherit; margin-bottom:12px; display:block; color:var(--gold-light);">ВКонтакте</a>
-      <a href="#" data-social="telegram" style="font-size:1.1rem; font-family:inherit; margin-bottom:12px; display:block; color:var(--gold-light);">Telegram</a>
+      <a href="#" data-social="vk" style="font-size:1rem; font-family:inherit; margin-bottom:12px; display:block; color:var(--gold);">ВКонтакте</a>
+      <a href="#" data-social="telegram" style="font-size:1rem; font-family:inherit; margin-bottom:12px; display:block; color:var(--gold);">Telegram</a>
       
       <h3 style="margin-top:48px;">Локация</h3>
-      <p style="font-family:'Cormorant Garamond',serif; font-size:1.8rem; color:var(--cream); margin-bottom:8px;">ул. Есенина, 1 к1</p>
+      <p style="font-family:var(--font-serif); font-size:1.8rem; color:var(--text-main); margin-bottom:8px;">ул. Есенина, 1 к1</p>
       <p>Ежедневно 11:00 — 21:00</p>
       <div class="map-placeholder">
         <a href="https://yandex.ru/maps/?text=Санкт-Петербург, ул. Есенина, 1 к1" target="_blank" class="map-btn">На карте</a>
@@ -435,10 +460,10 @@ footer a{color:var(--gold);text-decoration:none}
       </div>
     </div>
     <div class="contact-block reveal" style="display:flex; flex-direction:column; justify-content:flex-end;">
-      <div style="background:rgba(255,255,255,.03); padding:40px; border-radius:var(--radius); border:1px solid rgba(184,147,90,.2);">
-        <h3 style="margin-bottom:24px; font-size:1.5rem; color:var(--cream); font-family:'Cormorant Garamond',serif; text-transform:none; letter-spacing:0;">Neo SPA</h3>
-        <p style="color:rgba(244,239,230,.8); font-size:1.1rem; line-height:1.8; margin-bottom:32px; font-weight:300;">Пространство тишины и гармонии в центре Санкт-Петербурга. Мы создали место, где время замедляется.</p>
-        <div style="font-family:'Cormorant Garamond',serif; font-size:1.5rem; color:var(--gold); font-style:italic;">Искусство японского расслабления</div>
+      <div style="background:rgba(255,255,255,.02); padding:40px; border-radius:24px; border:1px solid var(--border);">
+        <h3 style="margin-bottom:24px; font-size:1.5rem; color:var(--text-main); font-family:var(--font-serif); text-transform:none; letter-spacing:0;">Neo SPA</h3>
+        <p style="color:var(--text-muted); font-size:1.1rem; line-height:1.8; margin-bottom:32px; font-weight:300;">Пространство тишины и гармонии в центре Санкт-Петербурга. Мы создали место, где время замедляется, а забота о теле и душе становится искусством.</p>
+        <div style="font-family:var(--font-serif); font-size:1.5rem; color:var(--gold); font-style:italic;">Искусство японского расслабления</div>
       </div>
     </div>
   </div>
@@ -467,7 +492,7 @@ footer a{color:var(--gold);text-decoration:none}
   <button class="admin-tab active" data-tab="subscribe" onclick="switchAccountTab('subscribe')">Подписка</button>
   <button class="admin-tab" data-tab="admin" onclick="switchAccountTab('admin')">Админ</button>
 </div>
-<div id="accountSubscribe"><p style="color:var(--text-muted);margin-bottom:24px;">Подпишитесь на новости и акции.</p>
+<div id="accountSubscribe"><p style="color:var(--text-muted);margin-bottom:24px;">Подпишитесь на новости и закрытые акции салона.</p>
 <form id="subscribeForm"><label class="form-label"><span>Email *</span><input type="email" name="email" required autocapitalize="none" autocorrect="off"></label><button type="submit" class="btn btn-gold" style="width:100%;">Подписаться</button></form></div>
 <div id="accountAdmin" style="display:none;"><p style="color:var(--text-muted);margin-bottom:24px;">Вход для администратора.</p>
 <form id="adminLoginForm"><label class="form-label"><span>Логин</span><input type="text" name="login" required autocapitalize="none" autocorrect="off"></label><label class="form-label"><span>Пароль</span><input type="password" name="password" required></label><button type="submit" class="btn btn-gold" style="width:100%;">Войти</button></form></div>
@@ -480,7 +505,7 @@ footer a{color:var(--gold);text-decoration:none}
 const API_URL = '/api.php';
 const ADMIN_STORAGE_KEY = 'neospa_admin_token';
 
-function svgImg(t,s){s=s||'NEO SPA';const e=x=>String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;');return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600"><rect width="800" height="600" fill="#1b2a2f"/><circle cx="400" cy="250" r="90" fill="none" stroke="#b8935a" stroke-width="1.5" opacity="0.5"/><circle cx="400" cy="250" r="60" fill="none" stroke="#b8935a" stroke-width="1" opacity="0.35"/><circle cx="400" cy="250" r="3" fill="#b8935a"/><text x="400" y="410" font-family="Georgia, serif" font-size="42" fill="#c9a76e" text-anchor="middle" font-style="italic">'+e(t)+'</text><text x="400" y="455" font-family="Arial" font-size="13" fill="#b8935a" text-anchor="middle" letter-spacing="4" opacity="0.7">'+e(s)+'</text></svg>');}
+function svgImg(t,s){s=s||'NEO SPA';const e=x=>String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;');return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600"><rect width="800" height="600" fill="#121e22"/><circle cx="400" cy="250" r="90" fill="none" stroke="#c9a76e" stroke-width="1.5" opacity="0.5"/><circle cx="400" cy="250" r="60" fill="none" stroke="#c9a76e" stroke-width="1" opacity="0.35"/><circle cx="400" cy="250" r="3" fill="#c9a76e"/><text x="400" y="410" font-family="Georgia, serif" font-size="42" fill="#e3c48e" text-anchor="middle" font-style="italic">'+e(t)+'</text><text x="400" y="455" font-family="Arial" font-size="13" fill="#c9a76e" text-anchor="middle" letter-spacing="4" opacity="0.7">'+e(s)+'</text></svg>');}
 const IMG={spa:'assets/spa.jpg',massage:'assets/massage.jpg',face:'assets/face.jpg',hair:'assets/hair.jpg',zen:'assets/zen.jpg',gift:'assets/gift.jpg',cert:'assets/cert.jpg'};
 const FALLBACK_IMG=svgImg('Neo SPA','ФОТО');
 function safeImg(src,k){if(!src||typeof src!=='string')return IMG[k]||FALLBACK_IMG;return src;}
@@ -524,6 +549,22 @@ const DEFAULT_DATA={
 };
 let siteData=JSON.parse(JSON.stringify(DEFAULT_DATA));
 
+// Инициализация анимаций
+function initAnimations(){
+  // Счётчики
+  document.querySelectorAll('.stat-num[data-target]').forEach(el=>{
+    const target = parseInt(el.dataset.target);
+    const plus = el.querySelector('.plus') ? el.querySelector('.plus').outerHTML : '';
+    let current = 0;
+    const step = Math.ceil(target / 50);
+    const timer = setInterval(()=>{
+      current += step;
+      if(current >= target){ current = target; clearInterval(timer); }
+      el.innerHTML = current + plus;
+    }, 30);
+  });
+}
+
 function renderVideos(){const c=document.getElementById('videoCarousel');if(!c)return;c.innerHTML=VIDEOS.map(v=>'<div class="video-card"><video muted loop playsinline autoplay preload="metadata" poster="'+v.poster+'" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';"><source src="'+v.src+'" type="video/mp4"></video><div class="video-fallback" style="display:none;background-image:url(\''+v.poster+'\')"></div><div class="video-label">'+escapeHtml(v.label)+'</div></div>').join('');}
 renderVideos();
 
@@ -558,6 +599,7 @@ async function loadSiteData(){
     }
   }catch(e){console.warn('Fallback:',e.message);}
   renderAll();
+  initAnimations();
 }
 
 function renderAll(){
@@ -643,9 +685,9 @@ function openCardModal(type,id){
     '<h2>'+escapeHtml(it.title)+'</h2>'+
     '<p>'+escapeHtml(it.full||it.short||'')+'</p>'+
     inc+
-    '<div style="background:var(--cream);padding:20px;border-radius:16px;margin-bottom:32px;display:flex;justify-content:space-between;align-items:center;">'+
+    '<div style="background:var(--bg-dark);padding:20px;border-radius:16px;margin-bottom:32px;display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);">'+
       '<div style="font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;font-weight:700;">Цена</div>'+
-      '<div style="font-family:\'Cormorant Garamond\',serif;font-size:2rem;color:var(--zen);font-weight:600;">'+(it.price?it.price.toLocaleString('ru-RU')+' ₽':'—')+'</div>'+
+      '<div style="font-family:\'Cormorant Garamond\',serif;font-size:2rem;color:var(--gold);font-weight:600;">'+(it.price?it.price.toLocaleString('ru-RU')+' ₽':'—')+'</div>'+
     '</div>'+
     '<button class="btn btn-gold" style="width:100%;" onclick="openBooking(\''+type+'\',\''+it.id+'\')">'+(type==='certificate'?'Купить':'Записаться')+'</button>';
   openModal('cardModal');
