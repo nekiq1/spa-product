@@ -215,11 +215,11 @@ section{padding:70px 20px}
       <span data-contact="address">Санкт-Петербург, ул. Есенина, 1 к1</span>
       <a href="mailto:info@parpalace.ru" data-contact="email">info@parpalace.ru</a>
     </div>
-    <div style="margin-top:32px;"><button class="btn btn-gold" onclick="openBooking('service')">Записаться</button></div>
+    <div style="margin-top:32px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap;"><button class="btn btn-gold" onclick="openBooking('service')">Записаться</button><button class="btn btn-outline" onclick="installApp()" style="border-color:var(--gold);color:var(--gold);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>На главный экран</button></div>
   </div>
 </div></section>
 
-<footer>© <span id="year"></span> Neo SPA · Санкт-Петербург · <a href="#" onclick="openAccount(); return false;">Личный кабинет</a> · <a href="#" onclick="installApp(); return false;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>На главный экран</a></footer>
+<footer>© <span id="year"></span> Neo SPA · Санкт-Петербург · <a href="#" onclick="openAccount(); return false;">Личный кабинет</a></footer>
 
 <div class="modal-overlay" id="cardModal"><div class="modal"><button class="modal-close" onclick="closeModal('cardModal')">×</button><div id="cardModalContent"></div></div></div>
 <div class="modal-overlay" id="bookingModal"><div class="modal"><button class="modal-close" onclick="closeModal('bookingModal')">×</button><h2 id="bookingTitle">Запись</h2>
